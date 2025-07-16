@@ -118,7 +118,7 @@ Cada revisão fortalece a memória de longo prazo, garantindo melhor fixação d
 
 ## 🤝 **Contribuições**
 
-Contribuições são sempre bem-vindas! Sinta-se à vontade para:
+É um projeto simples de ínicio mas que abre espaço para muitas funcionalidades. Sabendo disso contribuições são sempre bem-vindas! Sinta-se à vontade para:
 
 - Reportar bugs
 - Sugerir novas funcionalidades
