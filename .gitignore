@@ -1,5 +1,8 @@
 # See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
+# .env
+.env
+
 # Compiled output
 /dist
 /tmp
@@ -8,8 +11,14 @@
 
 # Node
 /node_modules
+server/node_modules
 npm-debug.log
 yarn-error.log
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
 
 # IDEs and editors
 .idea/

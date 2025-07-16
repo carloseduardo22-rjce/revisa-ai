@@ -1,0 +1,11 @@
+const express = require("express");
+const ContentController = require("../controllers/content.controller");
+
+const router = express.Router();
+
+router.get("/contents", ContentController.getAll);
+router.post("/contents", ContentController.create);
+router.delete("/contents/:id", ContentController.delete);
+router.put("/contents/:id", ContentController.updateRevisao);
+
+module.exports = router;

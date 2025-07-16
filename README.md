@@ -1,59 +1,130 @@
-# RevisaAi
+# 📚 Revisa-AI
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.14.
+**Sistema de repetição espaçada para otimizar seus estudos**
 
-## Development server
+O **Revisa-AI** é uma aplicação web desenvolvida para me ajudar nos estudos e fixar melhor o conteúdo através da técnica de **repetição espaçada**. O sistema permite adicionar links de conteúdos e agenda automaticamente revisões em intervalos otimizados: **7, +7 e +14 dias**.
 
-To start a local development server, run:
+## 🎯 **Por que usar o Revisa-AI?**
+
+- **📅 Repetição Espaçada:** Baseado em estudos científicos, o sistema agenda revisões nos momentos ideais para maximizar a retenção
+- **🤖 IA Integrada:** Resumos automáticos gerados pelo Google Gemini (opcional). No código já está pronto a requisição, a única coisa que você precisa passar é sua API KEY. Sinta-se a vontade para comentar o código que faz essa requisição se preferir não usa-la.
+- **📱 Interface Intuitiva:** Design moderno e responsivo construído com Angular e Tailwind
+- **💾 Dados Locais:** Seus dados ficam seguros em um banco SQLite local
+- **🚀 Fácil de Usar:** Basta adicionar um link e o sistema cuida do resto
+
+## ✨ **Funcionalidades**
+
+- ✅ Adicionar conteúdos via link
+- ✅ Agendamento automático de revisões (7, +7, +14 dias)
+- ✅ Dashboard de revisões do dia
+- ✅ Resumos automáticos opcional com IA (Google Gemini)
+- ✅ Controle de progresso das revisões
+- ✅ Interface responsiva e moderna
+
+## 🛠️ **Tecnologias Utilizadas**
+
+### **Frontend**
+
+- **Angular 19** - Framework principal
+- **TypeScript** - Linguagem
+- **TailwindCSS** - Estilização
+- **Standalone Components** - Arquitetura moderna
+
+### **Backend**
+
+- **Node.js** - Runtime
+- **Express.js** - Framework web
+- **SQLite** - Banco de dados local
+- **Google Gemini API** - IA para resumos (opcional)
+
+## 🚀 **Como usar**
+
+### **1. Clone o repositório**
+
+```bash
+git clone https://github.com/carloseduardo22-rjce/revisa-ai.git
+cd revisa-ai
+```
+
+### **2. Instale as dependências do frontend**
+
+```bash
+npm install
+```
+
+### **3. Instale as dependências do backend**
+
+```bash
+cd server
+npm install
+```
+
+### **4. Configure a API do Google Gemini (Opcional)**
+
+- Crie um arquivo `.env` na raiz do projeto
+- Adicione sua chave da API:
+
+```env
+google_ai_key=SUA_CHAVE_AQUI
+```
+
+### **5. Execute o projeto**
+
+**Terminal 1 - Backend:**
+
+```bash
+cd server
+node index.js
+```
+
+**Terminal 2 - Frontend:**
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### **6. Acesse a aplicação**
 
-## Code scaffolding
+- Frontend: `http://localhost:4200`
+- Backend API: `http://localhost:3000`
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## 📁 **Estrutura do Projeto**
 
-```bash
-ng generate component component-name
+```
+revisa-ai/
+├── src/                    # Frontend Angular
+│   ├── app/
+│   │   ├── components/     # Componentes da aplicação
+│   │   └── ...
+├── server/                 # Backend Node.js
+│   ├── controllers/        # Lógica dos endpoints
+│   ├── routes/            # Definição das rotas
+│   ├── models/            # Modelos de dados
+│   ├── database/          # Configuração do SQLite
+│   └── contents.db        # Banco de dados local
+├── package.json           # Dependências do frontend
+└── README.md
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 📖 **Como funciona a Repetição Espaçada**
 
-```bash
-ng generate --help
-```
+1. **Dia 1:** Você adiciona um conteúdo
+2. **Dia 8:** Primeira revisão (7 dias depois)
+3. **Dia 15:** Segunda revisão (+7 dias da primeira)
+4. **Dia 29:** Terceira revisão (+14 dias da segunda)
+5. **Concluído:** Conteúdo fixado na memória de longo prazo mas você pode adicionar mais dias se quiser.
 
-## Building
+Cada revisão fortalece a memória de longo prazo, garantindo melhor fixação do conteúdo.
 
-To build the project run:
+## 🤝 **Contribuições**
 
-```bash
-ng build
-```
+Contribuições são sempre bem-vindas! Sinta-se à vontade para:
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+- Reportar bugs
+- Sugerir novas funcionalidades
+- Enviar pull requests
 
-## Running unit tests
+## **Imagens do sistema**
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+![Ultimos conteúdos adicionados](images-readme/ultimos-conteudos.png)
+![Revisões agendadas para o dia atual](images-readme/revisoes-agendadas.png)

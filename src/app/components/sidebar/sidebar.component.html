@@ -1,0 +1,23 @@
+<div class="p-6 flex flex-col">
+  <nav>
+    <ul>
+      <li>
+        <a [routerLink]="['contents/add']" class="hover:text-blue-500"
+          >Adicionar conteúdo</a
+        >
+      </li>
+      <li>
+        <div class="flex items-center">
+          <a routerLink="/revisoes" class="hover:text-blue-500"
+            >Revisões agendadas</a
+          >
+          <div
+            class="w-5 h-5 flex justify-center items-center text-red-600 rounded-full"
+          >
+            {{ revisoesHoje.length }}
+          </div>
+        </div>
+      </li>
+    </ul>
+  </nav>
+</div>

@@ -1,0 +1,66 @@
+<div class="p-6 flex flex-col">
+  <div class="flex w-full justify-between">
+    @if (!showForm) {
+    <h1 class="text-[40px]">Ultimos conteúdos adicionados</h1>
+    } @else {
+    <h1 class="text-[40px]">Adicionar novo conteúdo</h1>
+    }
+    <button
+      class="bg-black p-4 rounded-full text-white cursor-pointer"
+      (click)="showForm = !showForm"
+    >
+      {{ showForm ? "Cancelar" : "Adicionar novo conteúdo" }}
+    </button>
+  </div>
+  @if (showForm) {
+  <div class="mt-6 bg-gray-100 p-4 rounded flex flex-col gap-4 w-full">
+    <label class="flex flex-col gap-1">
+      <span class="font-semibold">Título do conteúdo</span>
+      <input
+        type="text"
+        class="border rounded p-2"
+        [(ngModel)]="titulo"
+        placeholder="Digite o título"
+      />
+    </label>
+    <label class="flex flex-col gap-1">
+      <span class="font-semibold">Link do conteúdo</span>
+      <input
+        type="text"
+        class="border rounded p-2"
+        [(ngModel)]="link"
+        placeholder="Cole o link aqui"
+      />
+    </label>
+    <button
+      class="bg-blue-600 text-white rounded p-2 mt-2 self-end cursor-pointer"
+      (click)="addContent()"
+    >
+      Salvar
+    </button>
+  </div>
+  }
+  <div class="mt-8 flex flex-col gap-4">
+    @for (content of contents; track content.id) {
+    <div class="bg-white p-4 rounded shadow flex flex-col gap-2">
+      <span class="font-bold">{{ content.titulo }}</span>
+      <a
+        class="text-blue-600 underline"
+        [href]="content.link"
+        target="_blank"
+        >{{ content.link }}</a
+      >
+      <span> Adicionado em: {{ content.created_at }} </span>
+      @if (content.proximaRevisao) {
+      <span>Próxima revisão: {{ content.proximaRevisao }}</span>
+      }
+      <button
+        class="bg-red-600 text-white rounded p-2 mt-2 self-end w-fit"
+        (click)="deleteContent(content.id)"
+      >
+        Excluir
+      </button>
+    </div>
+    }
+  </div>
+</div>

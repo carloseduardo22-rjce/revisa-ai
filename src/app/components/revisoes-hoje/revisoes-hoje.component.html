@@ -1,0 +1,28 @@
+<div class="p-6 flex flex-col">
+  <h1 class="text-[40px] mb-6">Revisões agendadas</h1>
+  <div class="flex flex-col gap-4">
+    @for (content of reviewsToday; track content.id) {
+    <div class="bg-white p-4 rounded shadow flex flex-col gap-2">
+      <div class="flex justify-between">
+        <span class="font-bold">{{ content.titulo }}</span>
+        <button
+          class="bg-black text-white p-2 rounded-full cursor-pointer"
+          (click)="lastReview(content.id)"
+        >
+          Revisão feita
+        </button>
+      </div>
+      <a
+        class="text-blue-600 underline"
+        [href]="content.link"
+        target="_blank"
+        >{{ content.link }}</a
+      >
+      <span>Adicionado em: {{ content.created_at }}</span>
+      <span>Revisão marcada para hoje!</span>
+    </div>
+    } @if (reviewsToday.length === 0) {
+    <span class="text-gray-500">Nenhuma revisão agendada para hoje.</span>
+    }
+  </div>
+</div>
