@@ -21,7 +21,7 @@
       <span>Adicionado em: {{ content.created_at }}</span>
       <span>Revisão marcada para hoje!</span>
     </div>
-    } @if (reviewsToday.length === 0) {
+    } @empty {
     <span class="text-gray-500">Nenhuma revisão agendada para hoje.</span>
     }
   </div>
