@@ -128,3 +128,34 @@ Cada revisão fortalece a memória de longo prazo, garantindo melhor fixação d
 
 ![Ultimos conteúdos adicionados](images-readme/ultimos-conteudos.png)
 ![Revisões agendadas para o dia atual](images-readme/revisoes-agendadas.png)
+
+## **Código da API do Gemini removido mas pode usar caso queira.**
+
+```
+const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.google_ai_key}`,
+        {
+          headers: { "Content-Type": "application/json" },
+          method: "POST",
+          body: JSON.stringify({
+            contents: [
+              {
+                parts: [
+                  {
+                    text: `Acesse este link: ${link} e faça um resumo do conteúdo do link adicionando a sua explicação. Forme um resumo completo e rico. E também tópicos de quando usar.`,
+                  },
+                ],
+              },
+            ],
+          }),
+        }
+      );
+
+      const result = await response.json();
+      const resumo = result.candidates[0].content.parts[0].text;
+
+      ContentModel.create(titulo, link, created_at, resumo, function (err) {
+        if (err) return res.status(500).json({ error: err.message });
+        res.status(201).json({ id: this.lastID, titulo, link, created_at });
+      });
+```

@@ -2,143 +2,207 @@ const ContentModel = require("../models/content.model");
 require("dotenv").config();
 
 class ContentController {
+  static _calculateNextReviewDate(row, createdDate) {
+    const baseDate = row
+      ? new Date(row.data_ultima_revisao)
+      : new Date(row.created_at);
+    let reviewDate;
+
+    switch (row.ultima_revisao) {
+      case 1:
+        reviewDate = new Date(createdDate);
+        reviewDate.setDate(createdDate.getDate() + 7);
+        break;
+      case 2:
+        reviewDate = new Date(baseDate);
+        reviewDate.setDate(baseDate.getDate() + 7);
+        break;
+      case 3:
+        reviewDate = new Date(baseDate);
+        reviewDate.setDate(baseDate.getDate() + 14);
+        break;
+      default:
+        reviewDate = null;
+    }
+
+    return reviewDate;
+  }
+
+  static _processContentRow(row) {
+    const createdDate = new Date(row.created_at);
+
+    if (!(createdDate instanceof Date) || isNaN(createdDate.getTime())) {
+      return {
+        ...row,
+        nextReview: null,
+        created_at: "Invalid date",
+      };
+    }
+
+    const nextReviewDate = ContentController._calculateNextReviewDate(
+      row,
+      createdDate
+    );
+
+    return {
+      ...row,
+      nextReview: nextReviewDate
+        ? nextReviewDate.toISOString().split("T")[0]
+        : null,
+      created_at: createdDate.toISOString().split("T")[0],
+    };
+  }
+
   static async getAll(req, res) {
     ContentModel.getAll((err, rows) => {
-      if (err) return res.status(500).json({ error: err.message });
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
 
-      const result = rows.map((row) => {
-        const created = new Date(row.created_at);
-
-        if (isNaN(created.getTime())) {
-          return {
-            ...row,
-            proximaRevisao: null,
-            created_at: "Data inválida",
-          };
-        }
-
-        let revisao;
-        let dataBase;
-
-        if (row.data_ultima_revisao) {
-          dataBase = new Date(row.data_ultima_revisao);
-        } else {
-          dataBase = created;
-        }
-
-        if (row.ultima_revisao === 1) {
-          revisao = new Date(created);
-          revisao.setDate(created.getDate() + 7);
-        } else if (row.ultima_revisao === 2) {
-          revisao = new Date(dataBase);
-          revisao.setDate(dataBase.getDate() + 7);
-        } else if (row.ultima_revisao === 3) {
-          revisao = new Date(dataBase);
-          revisao.setDate(dataBase.getDate() + 14);
-        } else {
-          revisao = null;
-        }
-
-        return {
-          ...row,
-          proximaRevisao: revisao ? revisao.toISOString().split("T")[0] : null,
-          created_at: created.toISOString().split("T")[0],
-        };
-      });
-      res.json(result);
+      try {
+        const result = rows.map((row) => {
+          return ContentController._processContentRow(row);
+        });
+        res.json(result);
+      } catch (error) {
+        res.status(500).json({
+          error: "Erro ao processar dados de conteúdo",
+          details: error.message,
+        });
+      }
     });
   }
 
+  static _createContentResponse(id, title, link, createdAt) {
+    return {
+      id: id,
+      title: title,
+      link: link,
+      created_at: createdAt,
+    };
+  }
+
   static async create(req, res) {
-    const { titulo, link } = req.body;
-    if (!titulo || !link) {
+    const { titulo: title, link } = req.body;
+
+    if (!title || !link) {
       return res.status(400).json({ error: "Título e link são obrigatórios." });
     }
 
-    const created_at = new Date().toISOString();
+    const createdAt = new Date().toISOString();
+    let summary = "";
 
     try {
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.google_ai_key}`,
-        {
-          headers: { "Content-Type": "application/json" },
-          method: "POST",
-          body: JSON.stringify({
-            contents: [
-              {
-                parts: [
-                  {
-                    text: `Acesse este link: ${link} e faça um resumo do conteúdo do link adicionando a sua explicação. Forme um resumo completo e rico. E também tópicos de quando usar.`,
-                  },
-                ],
-              },
-            ],
-          }),
-        }
-      );
-
-      const result = await response.json();
-      const resumo = result.candidates[0].content.parts[0].text;
-
-      ContentModel.create(titulo, link, created_at, resumo, function (err) {
+      ContentModel.create(title, link, createdAt, summary, function (err) {
         if (err) return res.status(500).json({ error: err.message });
-        res.status(201).json({ id: this.lastID, titulo, link, created_at });
+
+        const response = ContentController._createContentResponse(
+          this.lastID,
+          title,
+          link,
+          createdAt
+        );
+        res.status(201).json(response);
       });
     } catch (error) {
-      res.status(500).json({ error: "Erro ao gerar resumo" });
+      res.status(500).json({
+        error: "Erro ao gerar resumo",
+        title: title,
+        link: link,
+        created_at: createdAt,
+        summary: summary,
+      });
     }
   }
 
   static delete(req, res) {
     const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ error: "ID inválido.", id: id });
+    }
+
     ContentModel.delete(id, function (err) {
       if (err) return res.status(500).json({ error: err.message });
       res.json({ success: true });
     });
   }
 
+  static _getNextReviewMessage(reviewLevel) {
+    const nextReviewMessages = {
+      2: "7 dias",
+      3: "14 dias",
+      4: "Concluído",
+    };
+
+    return nextReviewMessages[reviewLevel] || "Concluído";
+  }
+
+  static _getContentById(id, callback) {
+    ContentModel.getById(id, (err, row) => {
+      if (err) {
+        return callback({ status: 500, error: err.message });
+      }
+
+      if (!row) {
+        return callback({ status: 404, error: "Conteúdo não encontrado." });
+      }
+
+      callback(null, row);
+    });
+  }
+
+  static _updateReviewInDatabase(id, newLevel, currentDate, callback) {
+    ContentModel.updateRevisao(id, newLevel, currentDate, (err) => {
+      if (err) {
+        return callback({ status: 500, error: err.message });
+      }
+
+      const nextReviewMessage =
+        ContentController._getNextReviewMessage(newLevel);
+
+      callback(null, {
+        success: true,
+        message: "Revisão feita com sucesso.",
+        id: id,
+        last_review: newLevel,
+        next_review: nextReviewMessage,
+      });
+    });
+  }
+
   static updateRevisao(req, res) {
     const { id } = req.params;
 
-    if (id === "undefined" || isNaN(id)) {
-      return res.status(400).json({ error: "ID inválido", id: id });
+    if (!id) {
+      return res.status(400).json({ error: "ID inválido.", id: id });
     }
 
-    ContentModel.getById(id, (err, row) => {
-      if (err) return res.status(500).json({ error: err.message });
-      if (!row)
-        return res.status(404).json({ error: "Conteúdo não encontrado" });
+    ContentController._getContentById(id, (err, content) => {
+      if (err) {
+        return res.status(err.status).json({ error: err.error });
+      }
 
-      if (row.ultima_revisao >= 4) {
+      if (content.ultima_revisao >= 4) {
         return res.status(400).json({
-          error: "Todas as revisões já foram concluídas",
-          ultima_revisao: row.ultima_revisao,
+          error: "Todas as revisões foram feitas.",
+          last_review: content.ultima_revisao,
         });
       }
 
-      const novoNivelRevisao = row.ultima_revisao + 1;
-      const dataAtual = new Date().toISOString();
+      const newReviewLevel = content.ultima_revisao + 1;
+      const currentDate = new Date().toISOString();
 
-      ContentModel.updateRevisao(
+      ContentController._updateReviewInDatabase(
         id,
-        novoNivelRevisao,
-        dataAtual,
-        function (err) {
-          if (err) return res.status(500).json({ error: err.message });
+        newReviewLevel,
+        currentDate,
+        (err, result) => {
+          if (err) {
+            return res.status(err.status).json({ error: err.error });
+          }
 
-          const proximasRevisoes = {
-            2: "7 dias",
-            3: "14 dias",
-            4: "Concluído",
-          };
-
-          res.status(200).json({
-            success: true,
-            message: "Revisão atualizada com sucesso",
-            id: id,
-            ultima_revisao: novoNivelRevisao,
-            proxima_revisao: proximasRevisoes[novoNivelRevisao] || "Concluído",
-          });
+          res.status(200).json(result);
         }
       );
     });

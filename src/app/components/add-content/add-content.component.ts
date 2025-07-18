@@ -39,7 +39,7 @@ export class AddContentComponent implements OnInit {
   async addContent() {
     if (!this.titulo.trim() || !this.link.trim()) return;
     try {
-      await fetch('http://localhost:3000/api/contents', {
+      const response = await fetch('http://localhost:3000/api/contents', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -47,6 +47,13 @@ export class AddContentComponent implements OnInit {
           link: this.link,
         }),
       });
+
+      const message = await response.json();
+
+      if (message) {
+        console.log(message);
+      }
+
       this.titulo = '';
       this.link = '';
       this.showForm = false;
