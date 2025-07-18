@@ -23,6 +23,10 @@ export class AddContentComponent implements OnInit {
   }> = [];
 
   ngOnInit() {
+    if (localStorage.getItem('contents')) {
+      this.contents = JSON.parse(localStorage.getItem('contents') || '[]');
+      return;
+    }
     this.listContents();
   }
 
@@ -30,7 +34,7 @@ export class AddContentComponent implements OnInit {
     try {
       const response = await fetch('http://localhost:3000/api/contents');
       this.contents = await response.json();
-      console.log(this.contents);
+      localStorage.setItem('contents', JSON.stringify(this.contents));
     } catch (e) {
       this.contents = [];
     }
