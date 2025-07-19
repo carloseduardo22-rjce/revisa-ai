@@ -16,7 +16,7 @@ export class AddContentComponent implements OnInit {
     titulo: string;
     link: string;
     created_at: string;
-    proximaRevisao: string | null;
+    nextReview: string | null;
     resume_ai: string | null;
     ultima_revisao: number;
     data_ultima_revisao: string | null;
@@ -25,6 +25,7 @@ export class AddContentComponent implements OnInit {
   ngOnInit() {
     if (localStorage.getItem('contents')) {
       this.contents = JSON.parse(localStorage.getItem('contents') || '[]');
+      console.log(this.contents);
       return;
     }
     this.listContents();

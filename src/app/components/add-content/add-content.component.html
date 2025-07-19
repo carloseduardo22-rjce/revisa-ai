@@ -51,8 +51,8 @@
         >{{ content.link }}</a
       >
       <span> Adicionado em: {{ content.created_at }} </span>
-      @if (content.proximaRevisao) {
-      <span>Próxima revisão: {{ content.proximaRevisao }}</span>
+      @if (content.nextReview) {
+      <span>Próxima revisão: {{ content.nextReview }}</span>
       }
       <button
         class="bg-red-600 text-white rounded p-2 mt-2 self-end w-fit"

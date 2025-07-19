@@ -11,7 +11,7 @@ export class RevisoesHojeComponent implements OnInit {
     titulo: string;
     link: string;
     created_at: string;
-    proximaRevisao: string | null;
+    nextReview: string | null;
     ultima_revisao: number;
     data_ultima_revisao: string | null;
   }> = [];
@@ -27,7 +27,7 @@ export class RevisoesHojeComponent implements OnInit {
       const today = new Date().toLocaleDateString('en-CA');
 
       this.reviewsToday = contents.filter((content: any) => {
-        return content.proximaRevisao === today && content.ultima_revisao < 4;
+        return content.nextReview === today && content.ultima_revisao < 4;
       });
     } catch (e) {
       this.reviewsToday = [];
