@@ -44,7 +44,7 @@ export class RevisoesHojeComponent implements OnInit {
       const message = await response.json();
       if (message.success) {
         alert(
-          `✅ ${message.message}\n📅 Próxima revisão: ${message.proxima_revisao}`
+          `✅ ${message.message}\n📅 Próxima revisão: ${message.nextReview}`
         );
         this.findReviewsToday();
       } else {
