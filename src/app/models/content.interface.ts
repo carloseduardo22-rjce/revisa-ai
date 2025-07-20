@@ -14,6 +14,11 @@ export interface CreateContentRequest {
   link: string;
 }
 
+export interface UpdateContentRequest {
+  titulo: string;
+  link: string;
+}
+
 export interface ApiResponse<T> {
   success: boolean;
   data?: T;

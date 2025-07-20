@@ -207,6 +207,25 @@ class ContentController {
       );
     });
   }
+
+  static updateContent(req, res) {
+    const { id } = req.params;
+    const { titulo, link } = req.body;
+
+    if (!titulo || !link) {
+      return res.status(400).json({
+        error: "Título e link são obrigatórios",
+      });
+    }
+
+    ContentModel.updateContent(id, titulo, link, (err, result) => {
+      if (err) {
+        return res.status(err.status).json({ error: err.error });
+      }
+
+      res.status(200).json(result);
+    });
+  }
 }
 
 module.exports = ContentController;

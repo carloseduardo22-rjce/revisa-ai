@@ -2,12 +2,14 @@
   <div class="flex w-full justify-between">
     @if (!showForm) {
     <h1 class="text-[40px]">Ultimos conteúdos adicionados</h1>
+    } @else if (isEditing) {
+    <h1 class="text-[40px]">Editar conteúdo</h1>
     } @else {
     <h1 class="text-[40px]">Adicionar novo conteúdo</h1>
     }
     <button
       class="bg-black p-4 rounded-full text-white cursor-pointer"
-      (click)="showForm = !showForm"
+      (click)="showForm = !showForm; !showForm && cancelEdit()"
     >
       {{ showForm ? "Cancelar" : "Adicionar novo conteúdo" }}
     </button>
@@ -34,9 +36,9 @@
     </label>
     <button
       class="bg-blue-600 text-white rounded p-2 mt-2 self-end cursor-pointer"
-      (click)="addContent()"
+      (click)="isEditing ? updateContent() : addContent()"
     >
-      Salvar
+      {{ isEditing ? "Atualizar" : "Salvar" }}
     </button>
   </div>
   }
@@ -54,12 +56,20 @@
       @if (content.nextReview) {
       <span>Próxima revisão: {{ content.nextReview }}</span>
       }
-      <button
-        class="bg-red-600 text-white rounded p-2 mt-2 self-end w-fit"
-        (click)="deleteContent(content.id)"
-      >
-        Excluir
-      </button>
+      <div class="flex gap-1 self-end">
+        <button
+          class="bg-blue-600 text-white rounded p-2 mt-2 cursor-pointer"
+          (click)="editContent(content)"
+        >
+          Editar
+        </button>
+        <button
+          class="bg-red-600 text-white rounded p-2 mt-2 cursor-pointer"
+          (click)="deleteContent(content.id)"
+        >
+          Excluir
+        </button>
+      </div>
     </div>
     }
   </div>

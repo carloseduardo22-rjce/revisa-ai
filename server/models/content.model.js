@@ -28,6 +28,14 @@ class ContentModel {
       callback
     );
   }
+
+  static updateContent(id, titulo, link, callback) {
+    db.run(
+      "UPDATE contents SET titulo = ?, link = ? WHERE id = ?",
+      [titulo, link, id],
+      callback
+    );
+  }
 }
 
 module.exports = ContentModel;

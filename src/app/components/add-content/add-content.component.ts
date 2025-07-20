@@ -15,6 +15,8 @@ export class AddContentComponent implements OnInit {
   link = '';
   loading = false;
   contents: Content[] = [];
+  editingId: number | null = null;
+  isEditing = false;
 
   constructor(private contentService: ContentService) {}
 
@@ -58,6 +60,41 @@ export class AddContentComponent implements OnInit {
     } finally {
       this.loading = false;
     }
+  }
+
+  async updateContent(): Promise<void> {
+    if (!this.titulo.trim() || !this.link.trim() || !this.editingId) return;
+
+    this.loading = true;
+    try {
+      await this.contentService.updateContent(this.editingId, {
+        titulo: this.titulo,
+        link: this.link,
+      });
+
+      this.cancelEdit();
+      await this.loadContents();
+    } catch (error) {
+      console.error('Erro ao atualizar conteúdo:', error);
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  editContent(content: Content): void {
+    this.editingId = content.id;
+    this.titulo = content.titulo;
+    this.link = content.link;
+    this.isEditing = true;
+    this.showForm = true;
+  }
+
+  cancelEdit(): void {
+    this.editingId = null;
+    this.titulo = '';
+    this.link = '';
+    this.isEditing = false;
+    this.showForm = false;
   }
 
   async deleteContent(id: number): Promise<void> {

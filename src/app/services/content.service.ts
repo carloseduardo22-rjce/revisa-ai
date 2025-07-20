@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Content, CreateContentRequest } from '../models/content.interface';
+import {
+  Content,
+  CreateContentRequest,
+  UpdateContentRequest,
+} from '../models/content.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -40,6 +44,20 @@ export class ContentService {
     const result = await response.json();
     this.clearCache();
     return result;
+  }
+
+  async updateContent(id: number, request: UpdateContentRequest): Promise<any> {
+    try {
+      await fetch(`${this.API_BASE}/contents/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(request),
+      });
+      this.clearCache();
+      return;
+    } catch (error) {
+      console.error('Erro ao atualizar conteúdo:', error);
+    }
   }
 
   async updateReview(id: number): Promise<any> {
