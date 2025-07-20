@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { ContentService } from '../../services/content.service';
+import { Content } from '../../models/content.interface';
 
 @Component({
   selector: 'app-sidebar',
@@ -8,32 +10,25 @@ import { CommonModule } from '@angular/common';
   imports: [RouterLink, CommonModule],
   templateUrl: './sidebar.component.html',
 })
-export class SidebarComponent {
-  reviewsToday: Array<{
-    id: number;
-    titulo: string;
-    link: string;
-    created_at: string;
-    nextReview: string | null;
-    ultima_revisao: number;
-    data_ultima_revisao: string | null;
-  }> = [];
+export class SidebarComponent implements OnInit {
+  reviewsToday: Content[] = [];
+  loading = false;
 
-  ngOnInit() {
-    this.findReviewsToday();
+  constructor(private contentService: ContentService) {}
+
+  async ngOnInit() {
+    await this.findReviewsToday();
   }
 
-  async findReviewsToday() {
+  async findReviewsToday(): Promise<void> {
+    this.loading = true;
     try {
-      const response = await fetch('http://localhost:3000/api/contents');
-      const contents = await response.json();
-      const today = new Date().toLocaleDateString('en-CA');
-
-      this.reviewsToday = contents.filter((content: any) => {
-        return content.nextReview === today && content.ultima_revisao < 4;
-      });
-    } catch (e) {
+      this.reviewsToday = await this.contentService.getTodayReviews();
+    } catch (error) {
+      console.error('Erro ao buscar revisões:', error);
       this.reviewsToday = [];
+    } finally {
+      this.loading = false;
     }
   }
 }

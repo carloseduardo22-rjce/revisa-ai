@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ContentService } from '../../services/content.service';
+import { Content } from '../../models/content.interface';
 
 @Component({
   selector: 'app-revisoes-hoje',
@@ -6,53 +8,45 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './revisoes-hoje.component.html',
 })
 export class RevisoesHojeComponent implements OnInit {
-  reviewsToday: Array<{
-    id: number;
-    titulo: string;
-    link: string;
-    created_at: string;
-    nextReview: string | null;
-    ultima_revisao: number;
-    data_ultima_revisao: string | null;
-  }> = [];
+  reviewsToday: Content[] = [];
+  loading = false;
 
-  ngOnInit() {
-    this.findReviewsToday();
+  constructor(private contentService: ContentService) {}
+
+  async ngOnInit() {
+    await this.findReviewsToday();
   }
 
-  async findReviewsToday() {
+  async findReviewsToday(): Promise<void> {
+    this.loading = true;
     try {
-      const response = await fetch('http://localhost:3000/api/contents');
-      const contents = await response.json();
-      const today = new Date().toLocaleDateString('en-CA');
-
-      this.reviewsToday = contents.filter((content: any) => {
-        return content.nextReview === today && content.ultima_revisao < 4;
-      });
-    } catch (e) {
+      this.reviewsToday = await this.contentService.getTodayReviews();
+    } catch (error) {
+      console.error('Erro ao buscar revisões:', error);
       this.reviewsToday = [];
+    } finally {
+      this.loading = false;
     }
   }
 
-  async lastReview(id: number) {
+  async lastReview(id: number): Promise<void> {
+    this.loading = true;
     try {
-      const response = await fetch(`http://localhost:3000/api/contents/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-      });
+      const result = await this.contentService.updateReview(id);
 
-      const message = await response.json();
-      if (message.success) {
+      if (result.success) {
         alert(
-          `✅ ${message.message}\n📅 Próxima revisão: ${message.next_review}`
+          `✅ ${result.message}\n📅 Próxima revisão: ${result.next_review}`
         );
-        this.findReviewsToday();
+        await this.findReviewsToday();
       } else {
-        alert(`❌ Erro: ${message.error}`);
+        alert(`❌ Erro: ${result.error}`);
       }
-    } catch (e) {
-      console.error('Erro ao atualizar a revisão:', e);
+    } catch (error) {
+      console.error('Erro ao atualizar revisão:', error);
       alert('❌ Erro ao conectar com o servidor');
+    } finally {
+      this.loading = false;
     }
   }
 }
