@@ -96,25 +96,6 @@ docker-compose down && docker-compose up -d --build
 google_ai_key=SUA_CHAVE_AQUI
 ```
 
-## 💻 **Desenvolvimento Local**
-
-Se você quiser contribuir ou desenvolver localmente:
-
-### **Backend (Node.js)**
-
-```bash
-cd server
-npm install
-node index.js  # ou npm start
-```
-
-### **Frontend (Angular)**
-
-```bash
-npm install
-ng serve  # ou npm start
-```
-
 ### **Banco de dados**
 
 O SQLite será criado automaticamente em `server/data/contents.db`
@@ -198,8 +179,8 @@ Cada revisão fortalece a memória de longo prazo, garantindo melhor fixação d
 
 ## **Imagens do sistema**
 
-![Ultimos conteúdos adicionados](images-readme/adicionar-conteudo.png.png)
-![Revisões agendadas para o dia atual](images-readme/revisao-feita.png.png)
+![Ultimos conteúdos adicionados](images-readme/adicionar-conteudo.png)
+![Revisões agendadas para o dia atual](images-readme/revisao-feita.png)
 
 ## **Código da API do Gemini removido mas pode usar caso queira.**
 
