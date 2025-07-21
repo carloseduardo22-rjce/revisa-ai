@@ -182,7 +182,9 @@ Cada revisão fortalece a memória de longo prazo, garantindo melhor fixação d
 ![Ultimos conteúdos adicionados](images-readme/adicionar-conteudo.png)
 ![Revisões agendadas para o dia atual](images-readme/revisao-feita.png)
 
-## **Código da API do Gemini removido mas pode usar caso queira.**
+## **Código da API do Gemini removido mas pode usar caso queira no back**
+
+🚨 O prompt que usei é bastante raso, você pode melhorar muito mais ele.
 
 ```
 const response = await fetch(
