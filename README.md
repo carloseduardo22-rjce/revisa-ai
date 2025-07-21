@@ -14,30 +14,43 @@ O **Revisa-AI** é uma aplicação web desenvolvida para me ajudar nos estudos e
 
 ## ✨ **Funcionalidades**
 
-- ✅ Adicionar conteúdos via link
-- ✅ Agendamento automático de revisões (7, +7, +14 dias)
-- ✅ Dashboard de revisões do dia
-- ✅ Resumos automáticos opcional com IA (Google Gemini)
-- ✅ Controle de progresso das revisões
-- ✅ Interface responsiva e moderna
+- ✅ **Adicionar conteúdos** - Criar novos materiais de estudo via link
+- ✅ **Editar conteúdos** - Modificar título e link de conteúdos existentes
+- ✅ **Excluir conteúdos** - Remover materiais que não são mais necessários
+- ✅ **Agendamento automático** - Revisões programadas (7, +7, +14 dias)
+- ✅ **Dashboard de revisões** - Visualização das revisões do dia atual
+- ✅ **Dados persistentes** - SQLite com backup automático via Docker
+- ✅ **Interface responsiva** - Design moderno com TailwindCSS
+- ✅ **Arquitetura limpa** - Separação de responsabilidades (MVC + Services)
+- ✅ **Cache inteligente** - LocalStorage para melhor performance
+- ✅ **Containerização** - Deploy fácil com Docker Compose
+- 🔄 **Resumos com IA** - Google Gemini para análise de conteúdo (opcional)
 
 ## 🛠️ **Tecnologias Utilizadas**
 
 ### **Frontend**
 
-- **Angular 19** - Framework principal
-- **TypeScript** - Linguagem
-- **TailwindCSS** - Estilização
-- **Standalone Components** - Arquitetura moderna
+- **Angular 19** - Framework principal com Standalone Components
+- **TypeScript** - Linguagem tipada para melhor manutenibilidade
+- **TailwindCSS** - Framework CSS utilitário para estilização
+- **Angular Services** - Arquitetura de serviços para APIs
 
 ### **Backend**
 
-- **Node.js** - Runtime
-- **Express.js** - Framework web
-- **SQLite** - Banco de dados local
-- **Google Gemini API** - IA para resumos (opcional)
+- **Node.js** - Runtime JavaScript
+- **Express.js** - Framework web minimalista
+- **SQLite** - Banco de dados relacional leve
+- **MVC Pattern** - Arquitetura Model-View-Controller
+- **Google Gemini API** - IA para resumos automáticos (opcional)
 
-## 🚀 **Como usar**
+### **DevOps & Ferramentas**
+
+- **Docker** - Containerização da aplicação
+- **Docker Compose** - Orquestração de múltiplos containers
+- **Nginx** - Servidor web e proxy reverso
+- **VS Code** - Configurações de desenvolvimento incluídas
+
+## **🐳 Como usar com Docker (Recomendado)**
 
 ### **1. Clone o repositório**
 
@@ -46,64 +59,123 @@ git clone https://github.com/carloseduardo22-rjce/revisa-ai.git
 cd revisa-ai
 ```
 
-### **2. Instale as dependências do frontend**
+### **2. Suba a aplicação**
 
 ```bash
-npm install
+docker-compose up -d
 ```
 
-### **3. Instale as dependências do backend**
+### **3. Acesse no navegador**
+
+- **Frontend**: http://localhost
+- **API Backend**: http://localhost:3000/api (opcional)
+
+### **4. Dados persistentes**
+
+Os dados ficam salvos em `./server/data/` - mesmo reiniciando o Docker, seus dados permanecem.
+
+### **5. Comandos úteis**
 
 ```bash
-cd server
-npm install
+# Ver logs
+docker-compose logs -f
+
+# Parar a aplicação
+docker-compose down
+
+# Rebuild completo
+docker-compose down && docker-compose up -d --build
 ```
 
-### **4. Configure a API do Google Gemini (Opcional)**
+### **Configure a API do Google Gemini (Opcional)**
 
-- Crie um arquivo `.env` na raiz do projeto
+- Crie um arquivo `.env` na pasta `server/`
 - Adicione sua chave da API:
 
 ```env
 google_ai_key=SUA_CHAVE_AQUI
 ```
 
-### **5. Execute o projeto**
+## 💻 **Desenvolvimento Local**
 
-**Terminal 1 - Backend:**
+Se você quiser contribuir ou desenvolver localmente:
+
+### **Backend (Node.js)**
 
 ```bash
 cd server
-node index.js
+npm install
+node index.js  # ou npm start
 ```
 
-**Terminal 2 - Frontend:**
+### **Frontend (Angular)**
 
 ```bash
-ng serve
+npm install
+ng serve  # ou npm start
 ```
 
-### **6. Acesse a aplicação**
+### **Banco de dados**
 
-- Frontend: `http://localhost:4200`
-- Backend API: `http://localhost:3000`
+O SQLite será criado automaticamente em `server/data/contents.db`
 
 ## 📁 **Estrutura do Projeto**
 
 ```
 revisa-ai/
-├── src/                    # Frontend Angular
-│   ├── app/
-│   │   ├── components/     # Componentes da aplicação
-│   │   └── ...
-├── server/                 # Backend Node.js
-│   ├── controllers/        # Lógica dos endpoints
-│   ├── routes/            # Definição das rotas
-│   ├── models/            # Modelos de dados
-│   ├── database/          # Configuração do SQLite
-│   └── contents.db        # Banco de dados local
-├── package.json           # Dependências do frontend
-└── README.md
+├── 🌐 Frontend (Angular)
+│   ├── src/
+│   │   ├── app/
+│   │   │   ├── components/        # Componentes da aplicação
+│   │   │   │   ├── add-content/   # Adicionar/editar conteúdos
+│   │   │   │   ├── layout/        # Layout principal
+│   │   │   │   ├── revisoes-hoje/ # Revisões do dia
+│   │   │   │   └── sidebar/       # Menu lateral
+│   │   │   ├── services/          # Serviços Angular
+│   │   │   │   └── content.service.ts
+│   │   │   ├── models/            # Interfaces TypeScript
+│   │   │   │   └── content.interface.ts
+│   │   │   ├── app.routes.ts      # Roteamento
+│   │   │   └── app.config.ts      # Configuração
+│   │   ├── index.html             # Página principal
+│   │   ├── main.ts                # Entry point
+│   │   └── styles.css             # Estilos globais
+│   ├── package.json               # Dependências frontend
+│   ├── angular.json               # Configuração Angular
+│   ├── tailwind.config.js         # Configuração TailwindCSS
+│   └── tsconfig.json              # Configuração TypeScript
+│
+├── 🔧 Backend (Node.js)
+│   ├── server/
+│   │   ├── controllers/           # Lógica dos endpoints
+│   │   │   └── content.controller.js
+│   │   ├── routes/                # Definição das rotas
+│   │   │   └── content.routes.js
+│   │   ├── models/                # Modelos de dados
+│   │   │   └── content.model.js
+│   │   ├── database/              # Configuração do banco
+│   │   │   └── db.js
+│   │   ├── data/                  # Dados persistentes
+│   │   │   └── contents.db        # Banco SQLite
+│   │   ├── package.json           # Dependências backend
+│   │   ├── index.js               # Entry point
+│   │   ├── app.js                 # Configuração Express
+│   │   └── Dockerfile             # Container backend
+│
+├── 🐳 Docker
+│   ├── docker-compose.yml         # Orquestração completa
+│   ├── Dockerfile                 # Container frontend
+│   ├── nginx.conf                 # Configuração Nginx
+│   ├── .dockerignore              # Exclusões Docker
+│   └── DOCKER.md                  # Instruções Docker
+│
+├── 📷 Assets
+│   └── images-readme/             # Imagens da documentação
+│
+└── 📋 Configurações
+    ├── .vscode/                   # Configurações VS Code
+    ├── .gitignore                 # Arquivos ignorados
+    └── README.md                  # Esta documentação
 ```
 
 ## 📖 **Como funciona a Repetição Espaçada**
@@ -126,8 +198,8 @@ Cada revisão fortalece a memória de longo prazo, garantindo melhor fixação d
 
 ## **Imagens do sistema**
 
-![Ultimos conteúdos adicionados](images-readme/ultimos-conteudos.png)
-![Revisões agendadas para o dia atual](images-readme/revisoes-agendadas.png)
+![Ultimos conteúdos adicionados](images-readme/adicionar-conteudo.png.png)
+![Revisões agendadas para o dia atual](images-readme/revisao-feita.png.png)
 
 ## **Código da API do Gemini removido mas pode usar caso queira.**
 
