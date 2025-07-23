@@ -80,6 +80,31 @@ export class ContentService {
     );
   }
 
+  async getForgottenReviews(): Promise<Content[]> {
+    const contents = await this.getAllContents();
+    return contents.filter((content) => this.isPastTheReviewDate(content));
+  }
+
+  private isPastTheReviewDate(content: Content): boolean {
+    if (content.ultima_revisao >= 4) return false;
+
+    const createdDate = new Date(content.created_at);
+    const today = new Date();
+    const daysPassed = Math.floor(
+      (today.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24)
+    );
+
+    type ReviewLevel = 1 | 2 | 3;
+    const reviewSchedule: Record<ReviewLevel, number> = {
+      1: 7,
+      2: 7,
+      3: 14,
+    };
+
+    const expectedDays = reviewSchedule[content.ultima_revisao as ReviewLevel];
+    return expectedDays ? daysPassed > expectedDays : false;
+  }
+
   private getFromCache(): Content[] | null {
     try {
       const cached = localStorage.getItem(this.CACHE_KEY);
