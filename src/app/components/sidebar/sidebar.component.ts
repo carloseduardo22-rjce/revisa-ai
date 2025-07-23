@@ -12,15 +12,21 @@ import { Content } from '../../models/content.interface';
 })
 export class SidebarComponent implements OnInit {
   reviewsToday: Content[] = [];
+  forgottenReviews: Content[] = [];
   loading = false;
 
   constructor(private contentService: ContentService) {}
 
   async ngOnInit() {
     await this.findReviewsToday();
+    await this.findForgottenReviews();
   }
 
-  async findReviewsToday(): Promise<void> {
+  async findForgottenReviews() {
+    this.forgottenReviews = await this.contentService.getForgottenReviews();
+  }
+
+  async findReviewsToday() {
     this.loading = true;
     try {
       this.reviewsToday = await this.contentService.getTodayReviews();

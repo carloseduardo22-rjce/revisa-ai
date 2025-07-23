@@ -20,7 +20,7 @@ export class ForgottenReviewsComponent {
     this.forgottenReviews = await this.contentService.getForgottenReviews();
   }
 
-  async lastReview(id: number): Promise<void> {
+  async lastReview(id: number) {
     try {
       const result = await this.contentService.updateReview(id);
 

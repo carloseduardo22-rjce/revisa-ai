@@ -24,7 +24,7 @@ export class AddContentComponent implements OnInit {
     await this.loadContents();
   }
 
-  async loadContents(): Promise<void> {
+  async loadContents() {
     this.loading = true;
     try {
       this.contents = await this.contentService.getAllContents();
@@ -36,7 +36,7 @@ export class AddContentComponent implements OnInit {
     }
   }
 
-  async addContent(): Promise<void> {
+  async addContent() {
     if (!this.titulo.trim() || !this.link.trim()) return;
 
     this.loading = true;
@@ -62,7 +62,7 @@ export class AddContentComponent implements OnInit {
     }
   }
 
-  async updateContent(): Promise<void> {
+  async updateContent() {
     if (!this.titulo.trim() || !this.link.trim() || !this.editingId) return;
 
     this.loading = true;

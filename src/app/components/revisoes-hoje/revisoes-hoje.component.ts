@@ -17,7 +17,7 @@ export class RevisoesHojeComponent implements OnInit {
     await this.findReviewsToday();
   }
 
-  async findReviewsToday(): Promise<void> {
+  async findReviewsToday() {
     this.loading = true;
     try {
       this.reviewsToday = await this.contentService.getTodayReviews();
@@ -29,7 +29,7 @@ export class RevisoesHojeComponent implements OnInit {
     }
   }
 
-  async lastReview(id: number): Promise<void> {
+  async lastReview(id: number) {
     this.loading = true;
     try {
       const result = await this.contentService.updateReview(id);

@@ -19,10 +19,15 @@
         </div>
       </li>
       <li>
-        <div class="flex items-center">
+        <div class="flex items-center gap-1">
           <a routerLink="reviews/forget" class="hover:text-blue-500"
             >Revisões esquecidas</a
           >
+          <div
+            class="w-5 h-5 flex justify-center items-center text-red-600 rounded-full"
+          >
+            {{ forgottenReviews.length }}
+          </div>
         </div>
       </li>
     </ul>
