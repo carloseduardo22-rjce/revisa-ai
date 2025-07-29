@@ -29,10 +29,10 @@ export class RevisoesHojeComponent implements OnInit {
     }
   }
 
-  async lastReview(id: number) {
+  async lastReview(content: Content) {
     this.loading = true;
     try {
-      const result = await this.contentService.updateReview(id);
+      const result = await this.contentService.updateReview(content);
 
       if (result.success) {
         alert(

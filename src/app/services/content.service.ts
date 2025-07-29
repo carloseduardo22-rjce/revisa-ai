@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Component, Injectable } from '@angular/core';
 import {
   Content,
   CreateContentRequest,
@@ -60,10 +60,11 @@ export class ContentService {
     }
   }
 
-  async updateReview(id: number): Promise<any> {
-    const response = await fetch(`${this.API_BASE}/contents/${id}`, {
+  async updateReview(content: Content): Promise<any> {
+    const response = await fetch(`${this.API_BASE}/contents`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(content),
     });
 
     const result = await response.json();
@@ -82,17 +83,17 @@ export class ContentService {
 
   async getForgottenReviews(): Promise<Content[]> {
     const contents = await this.getAllContents();
+    console.log(contents);
     return contents.filter((content) => this.isPastTheReviewDate(content));
   }
 
   private isPastTheReviewDate(content: Content): boolean {
-    if (content.ultima_revisao >= 4) return false;
-
-    const createdDate = new Date(content.created_at);
-    const today = new Date();
-    const daysPassed = Math.floor(
-      (today.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24)
-    );
+    if (
+      content.ultima_revisao >= 4 ||
+      new Date(content.nextReview ?? '') > new Date()
+    ) {
+      return false;
+    }
 
     type ReviewLevel = 1 | 2 | 3;
     const reviewSchedule: Record<ReviewLevel, number> = {
@@ -101,8 +102,18 @@ export class ContentService {
       3: 14,
     };
 
-    const expectedDays = reviewSchedule[content.ultima_revisao as ReviewLevel];
-    return expectedDays ? daysPassed > expectedDays : false;
+    const daysPassed = new Date(content.created_at);
+    daysPassed.setDate(
+      daysPassed.getDate() +
+        reviewSchedule[content.ultima_revisao as ReviewLevel]
+    );
+    const today = new Date();
+
+    if (today > daysPassed) {
+      return true;
+    }
+
+    return false;
   }
 
   private getFromCache(): Content[] | null {

@@ -42,7 +42,7 @@ export class AddContentComponent implements OnInit {
     this.loading = true;
     try {
       const result = await this.contentService.createContent({
-        titulo: this.titulo,
+        title: this.titulo,
         link: this.link,
       });
 
@@ -68,7 +68,7 @@ export class AddContentComponent implements OnInit {
     this.loading = true;
     try {
       await this.contentService.updateContent(this.editingId, {
-        titulo: this.titulo,
+        title: this.titulo,
         link: this.link,
       });
 

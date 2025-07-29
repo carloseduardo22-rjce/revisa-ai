@@ -20,14 +20,16 @@ export class ForgottenReviewsComponent {
     this.forgottenReviews = await this.contentService.getForgottenReviews();
   }
 
-  async lastReview(id: number) {
+  async lastReview(content: Content) {
+    content.late = 'sim';
     try {
-      const result = await this.contentService.updateReview(id);
+      const result = await this.contentService.updateReview(content);
 
       if (result.success) {
         alert(
           `✅ ${result.message}\n📅 Próxima revisão: ${result.next_review}`
         );
+        this.loadForgottenReviews();
       } else {
         alert(`❌ Erro: ${result.error}`);
       }

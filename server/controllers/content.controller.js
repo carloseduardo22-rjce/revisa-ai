@@ -83,9 +83,10 @@ class ContentController {
   }
 
   static async create(req, res) {
-    const { titulo: title, link } = req.body;
+    const { titulo, title, link } = req.body;
+    const finalTitle = title || titulo;
 
-    if (!title || !link) {
+    if (!finalTitle || !link) {
       return res.status(400).json({ error: "Título e link são obrigatórios." });
     }
 
@@ -93,12 +94,12 @@ class ContentController {
     let summary = "";
 
     try {
-      ContentModel.create(title, link, createdAt, summary, function (err) {
+      ContentModel.create(finalTitle, link, createdAt, summary, function (err) {
         if (err) return res.status(500).json({ error: err.message });
 
         const response = ContentController._createContentResponse(
           this.lastID,
-          title,
+          finalTitle,
           link,
           createdAt
         );
@@ -172,13 +173,13 @@ class ContentController {
   }
 
   static updateRevisao(req, res) {
-    const { id } = req.params;
+    const content = req.body;
 
-    if (!id) {
-      return res.status(400).json({ error: "ID inválido.", id: id });
+    if (!content.id) {
+      return res.status(400).json({ error: "ID inválido.", id: content.id });
     }
 
-    ContentController._getContentById(id, (err, content) => {
+    ContentController._getContentById(content.id, (err, content) => {
       if (err) {
         return res.status(err.status).json({ error: err.error });
       }
@@ -194,7 +195,7 @@ class ContentController {
       const currentDate = new Date().toISOString();
 
       ContentController._updateReviewInDatabase(
-        id,
+        content.id,
         newReviewLevel,
         currentDate,
         (err, result) => {
@@ -210,15 +211,16 @@ class ContentController {
 
   static updateContent(req, res) {
     const { id } = req.params;
-    const { titulo, link } = req.body;
+    const { titulo, title, link } = req.body;
+    const finalTitle = title || titulo;
 
-    if (!titulo || !link) {
+    if (!finalTitle || !link) {
       return res.status(400).json({
         error: "Título e link são obrigatórios",
       });
     }
 
-    ContentModel.updateContent(id, titulo, link, (err, result) => {
+    ContentModel.updateContent(id, finalTitle, link, (err, result) => {
       if (err) {
         return res.status(err.status).json({ error: err.error });
       }

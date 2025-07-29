@@ -7,15 +7,16 @@ export interface Content {
   resume_ai: string | null;
   ultima_revisao: number;
   data_ultima_revisao: string | null;
+  late?: string | null;
 }
 
 export interface CreateContentRequest {
-  titulo: string;
+  title: string;
   link: string;
 }
 
 export interface UpdateContentRequest {
-  titulo: string;
+  title: string;
   link: string;
 }
 

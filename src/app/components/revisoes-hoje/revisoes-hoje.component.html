@@ -4,10 +4,10 @@
     @for (content of reviewsToday; track content.id) {
     <div class="bg-white p-4 rounded shadow flex flex-col gap-2">
       <div class="flex justify-between">
-        <span class="font-bold">{{ content.titulo }}</span>
+        <span class="font-bold">{{ content.ultima_revisao }}</span>
         <button
           class="bg-black text-white p-2.5 rounded-full cursor-pointer"
-          (click)="lastReview(content.id)"
+          (click)="lastReview(content)"
         >
           Revisão feita
         </button>
