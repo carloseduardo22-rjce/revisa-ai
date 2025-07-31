@@ -42,34 +42,100 @@
     </button>
   </div>
   }
-  <div class="mt-8 flex flex-col gap-4">
-    @for (content of contents; track content.id) {
-    <div class="bg-white p-4 rounded shadow flex flex-col gap-2">
-      <span class="font-bold">{{ content.titulo }}</span>
-      <a
-        class="text-blue-600 underline"
-        [href]="content.link"
-        target="_blank"
-        >{{ content.link }}</a
-      >
-      <span> Adicionado em: {{ content.created_at }} </span>
-      @if (content.nextReview) {
-      <span>Próxima revisão: {{ content.nextReview }}</span>
-      }
-      <div class="flex gap-1 self-end">
-        <button
-          class="bg-blue-600 text-white rounded p-2 mt-2 cursor-pointer"
-          (click)="editContent(content)"
-        >
-          Editar
-        </button>
-        <button
-          class="bg-red-600 text-white rounded p-2 mt-2 cursor-pointer"
-          (click)="deleteContent(content.id)"
-        >
-          Excluir
-        </button>
-      </div>
+  <div class="mt-8">
+    @if (loading) {
+    <div class="bg-white rounded shadow p-8 text-center">
+      <div class="text-gray-500">Carregando conteúdos...</div>
+    </div>
+    } @else {
+    <div class="bg-white rounded shadow overflow-hidden">
+      <table class="w-full table-fixed">
+        <thead class="bg-gray-50">
+          <tr>
+            <th
+              class="w-1/4 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Título do Conteúdo
+            </th>
+            <th
+              class="w-1/4 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Link do Conteúdo
+            </th>
+            <th
+              class="w-1/6 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Data Adicionado
+            </th>
+            <th
+              class="w-1/6 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Próxima Revisão
+            </th>
+            <th
+              class="w-1/6 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Ações
+            </th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          @for (content of contents; track content.id) {
+          <tr class="hover:bg-gray-50">
+            <td class="px-6 py-4">
+              <div class="text-sm font-medium text-gray-900 truncate">
+                {{ content.titulo }}
+              </div>
+            </td>
+            <td class="px-6 py-4">
+              <div class="overflow-x-auto max-w-full">
+                <a
+                  class="text-sm text-blue-600 underline hover:text-blue-800 whitespace-nowrap block"
+                  [href]="content.link"
+                  target="_blank"
+                  [title]="content.link"
+                >
+                  {{ content.link }}
+                </a>
+              </div>
+            </td>
+            <td class="px-6 py-4">
+              <div class="text-sm text-gray-900">
+                {{ content.created_at }}
+              </div>
+            </td>
+            <td class="px-6 py-4">
+              <div class="text-sm text-gray-900">
+                {{ content.nextReview || "Não agendada" }}
+              </div>
+            </td>
+            <td class="px-6 py-4">
+              <div class="flex gap-2">
+                <button
+                  class="bg-blue-600 text-white rounded px-3 py-1 text-sm cursor-pointer hover:bg-blue-700 transition-colors"
+                  (click)="editContent(content)"
+                >
+                  Editar
+                </button>
+                <button
+                  class="bg-red-600 text-white rounded px-3 py-1 text-sm cursor-pointer hover:bg-red-700 transition-colors"
+                  (click)="deleteContent(content.id)"
+                >
+                  Excluir
+                </button>
+              </div>
+            </td>
+          </tr>
+          } @empty {
+          <tr>
+            <td colspan="5" class="px-6 py-8 text-center text-gray-500">
+              <div class="text-lg">📚</div>
+              <div class="mt-2">Nenhum conteúdo adicionado ainda.</div>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
     </div>
     }
   </div>
