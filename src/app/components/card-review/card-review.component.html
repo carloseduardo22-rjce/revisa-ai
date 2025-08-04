@@ -1,0 +1,46 @@
+@if (content) {
+<div class="flex flex-col gap-2 w-full h-full justify-center items-center">
+  <div class="card-container w-96 h-72">
+    <div
+      class="card-inner relative w-full h-full transition-transform duration-800"
+      [ngClass]="backOfCard ? 'rotated' : ''"
+    >
+      <div
+        class="card-face absolute w-full h-full bg-black rounded-2xl text-white flex flex-col justify-center items-center"
+      >
+        <div class="text-lg font-medium text-center px-6">
+          Aqui irá a pergunta
+        </div>
+      </div>
+
+      <div
+        class="card-face card-back absolute w-full h-full bg-gray-800 rounded-2xl text-white flex flex-col justify-center items-center"
+      >
+        <div class="text-lg font-medium text-center px-6">
+          Aqui irá a resposta
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <button
+      class="bg-black text-white w-32 rounded-full p-1 cursor-pointer hover:bg-gray-800 transition-colors"
+      (click)="flipCard()"
+    >
+      {{ backOfCard ? "Ver Pergunta" : "Ver Resposta" }}
+    </button>
+  </div>
+</div>
+
+} @else {
+<div class="w-full h-full flex justify-center items-center">
+  <div class="flex flex-col items-center">
+    <i-lucide [img]="getIconByName('swords')" size="70"></i-lucide>
+    <h1>
+      Sessão não liberada, para conseguir acesso, clique em algum conteúdo
+      disponível para hoje na seção 'Revisões para hoje'
+    </h1>
+  </div>
+</div>
+}

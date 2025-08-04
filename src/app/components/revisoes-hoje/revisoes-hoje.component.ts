@@ -29,6 +29,10 @@ export class RevisoesHojeComponent implements OnInit {
     }
   }
 
+  reviewWithCard(content: Content): void {
+    this.contentService.reviewWithCard.set(content);
+  }
+
   async lastReview(content: Content) {
     this.loading = true;
     try {

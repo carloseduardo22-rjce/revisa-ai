@@ -1,13 +1,15 @@
-<div class="p-6 flex flex-col">
+<div class="pl-4 pt-4 flex flex-col">
   <nav>
-    <ul>
-      <li>
+    <ul class="flex flex-col gap-2.5">
+      <li class="flex gap-1">
+        <i-lucide [img]="getIconByName('plus')"></i-lucide>
         <a [routerLink]="['contents/add']" class="hover:text-blue-500"
           >Adicionar conteúdo</a
         >
       </li>
       <li>
-        <div class="flex items-center">
+        <div class="flex gap-1 items-center">
+          <i-lucide [img]="getIconByName('calendarClock')"></i-lucide>
           <a routerLink="/reviews/today" class="hover:text-blue-500"
             >Revisões para hoje</a
           >
@@ -20,6 +22,7 @@
       </li>
       <li>
         <div class="flex items-center gap-1">
+          <i-lucide [img]="getIconByName('annoyed')"></i-lucide>
           <a routerLink="reviews/forget" class="hover:text-blue-500"
             >Revisões esquecidas</a
           >
@@ -28,6 +31,14 @@
           >
             {{ forgottenReviews.length }}
           </div>
+        </div>
+      </li>
+      <li>
+        <div class="flex items-center gap-1">
+          <i-lucide [img]="getIconByName('swords')"></i-lucide>
+          <a routerLink="reviews/with-cards" class="hover:text-blue-500"
+            >Revisões com cards</a
+          >
         </div>
       </li>
     </ul>

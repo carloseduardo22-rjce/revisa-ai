@@ -1,4 +1,4 @@
-import { Component, Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import {
   Content,
   CreateContentRequest,
@@ -11,6 +11,7 @@ import {
 export class ContentService {
   private readonly API_BASE = 'http://localhost:3000/api';
   private readonly CACHE_KEY = 'contents';
+  reviewWithCard = signal<Content | null>(null);
 
   async getAllContents(useCache = true): Promise<Content[]> {
     if (useCache) {
