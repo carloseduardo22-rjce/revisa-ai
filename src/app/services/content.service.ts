@@ -11,7 +11,14 @@ import {
 export class ContentService {
   private readonly API_BASE = 'http://localhost:3000/api';
   private readonly CACHE_KEY = 'contents';
+
   reviewWithCard = signal<Content | null>(null);
+  reviewStarted = signal<boolean>(false);
+  stopWatch = signal<string>('00:00');
+
+  private timers: { [contentId: number]: boolean } = {};
+  private activeIntervals: { [contentId: number]: number } = {};
+  private readonly TIMER_LIMIT_MINUTES = 40;
 
   async getAllContents(useCache = true): Promise<Content[]> {
     if (useCache) {
@@ -86,6 +93,63 @@ export class ContentService {
     const contents = await this.getAllContents();
     console.log(contents);
     return contents.filter((content) => this.isPastTheReviewDate(content));
+  }
+
+  startTimer(contentId: number): void {
+    this.reviewStarted.set(true);
+    this.timers[contentId] = true;
+
+    let minutes = 0;
+    let seconds = 0;
+
+    const intervalId = window.setInterval(() => {
+      seconds++;
+      if (seconds === 60) {
+        minutes++;
+        seconds = 0;
+      }
+
+      const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds
+        .toString()
+        .padStart(2, '0')}`;
+
+      this.stopWatch.set(formattedTime);
+
+      if (minutes >= this.TIMER_LIMIT_MINUTES) {
+        this.stopTimer(contentId);
+        this.autoCompleteReview(contentId);
+      }
+    }, 1000);
+
+    this.activeIntervals[contentId] = intervalId;
+  }
+
+  stopTimer(contentId: number): void {
+    if (this.activeIntervals[contentId]) {
+      window.clearInterval(this.activeIntervals[contentId]);
+      delete this.activeIntervals[contentId];
+    }
+    this.timers[contentId] = false;
+    this.reviewStarted.set(false);
+    this.stopWatch.set('00:00');
+  }
+
+  isTimerActive(contentId: number): boolean {
+    return this.timers[contentId] || false;
+  }
+
+  private async autoCompleteReview(contentId: number): Promise<void> {
+    const contents = await this.getAllContents();
+    const content = contents.find((c) => c.id === contentId);
+
+    if (content) {
+      try {
+        await this.updateReview(content);
+        console.log(`Revisão auto-completada para: ${content.titulo}`);
+      } catch (error) {
+        console.error('Erro ao auto-completar revisão:', error);
+      }
+    }
   }
 
   private isPastTheReviewDate(content: Content): boolean {

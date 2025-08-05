@@ -1,3 +1,26 @@
+@if(reviewStart) {
+<div
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+>
+  <div
+    class="bg-white w-80 h-80 border rounded-2xl border-black p-4 flex flex-col gap-4 shadow-lg"
+  >
+    <h1 class="text-lg font-semibold">
+      Temporizador de revisão iniciado. Se você
+      <span class="bg-yellow-400 p-1 rounded-2xl"
+        >não apertar em revisão feita por conta própria</span
+      >
+      antes dos 30 minutos o sistema marcará a revisão como feita.
+    </h1>
+    <button
+      (click)="closeModal()"
+      class="cursor-pointer bg-black rounded-2xl text-white p-2 hover:bg-gray-800 transition-colors"
+    >
+      Entendido
+    </button>
+  </div>
+</div>
+}
 <div class="p-6 flex flex-col">
   <h1 class="text-[40px] mb-6">Revisões agendadas para hoje</h1>
   <div class="bg-white rounded shadow overflow-hidden">
@@ -5,12 +28,17 @@
       <thead class="bg-gray-50">
         <tr>
           <th
-            class="w-1/3 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            class="w-1/6 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
           >
             Título do Conteúdo
           </th>
           <th
-            class="w-1/3 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            class="w-1/6 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+          >
+            Iniciar revisão
+          </th>
+          <th
+            class="w-1/6 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
           >
             Link do Conteúdo
           </th>
@@ -35,6 +63,20 @@
             </div>
           </td>
           <td class="px-6 py-4">
+            @if (!isTimerActive(content.id)) {
+            <div>
+              <button
+                class="bg-red-500 text-white rounded px-4 py-2 text-sm cursor-pointer hover:bg-red-600 transition-colors"
+                (click)="startTimer(content.id)"
+              >
+                Iniciar revisão
+              </button>
+            </div>
+            } @else {
+            <p>{{ stopWatch }}</p>
+            }
+          </td>
+          <td class="px-6 py-4">
             <div class="overflow-x-auto max-w-full">
               <a
                 class="text-sm text-blue-600 underline hover:text-blue-800 whitespace-nowrap block"
@@ -51,7 +93,7 @@
               {{ content.created_at }}
             </div>
           </td>
-          <td class="px-6 py-4">
+          <td class="px-6 py-4 flex flex-col gap-2">
             <button
               class="bg-green-600 text-white rounded px-4 py-2 text-sm cursor-pointer hover:bg-green-700 transition-colors"
               (click)="lastReview(content)"
@@ -62,7 +104,7 @@
               class="bg-blue-600 text-white rounded px-4 py-2 text-sm cursor-pointer hover:bg-blue-700 transition-colors"
               (click)="reviewWithCard(content)"
             >
-              Fazer revisão com cards
+              Revisão com cards
             </button>
           </td>
         </tr>

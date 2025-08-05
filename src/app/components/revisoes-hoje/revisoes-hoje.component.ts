@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ContentService } from '../../services/content.service';
 import { Content } from '../../models/content.interface';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-revisoes-hoje',
@@ -9,15 +10,34 @@ import { Content } from '../../models/content.interface';
 })
 export class RevisoesHojeComponent implements OnInit {
   reviewsToday: Content[] = [];
-  loading = false;
+  loading: boolean = false;
 
-  constructor(private contentService: ContentService) {}
+  get reviewStart() {
+    return this.contentService.reviewStarted();
+  }
+  get stopWatch() {
+    return this.contentService.stopWatch();
+  }
+
+  constructor(private contentService: ContentService, private router: Router) {}
 
   async ngOnInit() {
     await this.findReviewsToday();
   }
 
-  async findReviewsToday() {
+  startTimer(contentId: number): void {
+    this.contentService.startTimer(contentId);
+  }
+
+  isTimerActive(contentId: number): boolean {
+    return this.contentService.isTimerActive(contentId);
+  }
+
+  closeModal(): void {
+    this.contentService.reviewStarted.set(false);
+  }
+
+  async findReviewsToday(): Promise<void> {
     this.loading = true;
     try {
       this.reviewsToday = await this.contentService.getTodayReviews();
@@ -31,11 +51,16 @@ export class RevisoesHojeComponent implements OnInit {
 
   reviewWithCard(content: Content): void {
     this.contentService.reviewWithCard.set(content);
+    this.router.navigate(['reviews/with-cards']);
   }
 
-  async lastReview(content: Content) {
+  async lastReview(content: Content): Promise<void> {
     this.loading = true;
     try {
+      if (this.contentService.isTimerActive(content.id)) {
+        this.contentService.stopTimer(content.id);
+      }
+
       const result = await this.contentService.updateReview(content);
 
       if (result.success) {
