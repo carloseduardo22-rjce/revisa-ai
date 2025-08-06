@@ -182,35 +182,49 @@ Cada revisão fortalece a memória de longo prazo, garantindo melhor fixação d
 ![Ultimos conteúdos adicionados](images-readme/adicionar-conteudo.png)
 ![Revisões agendadas para o dia atual](images-readme/revisao-feita.png)
 
-## **Código da API do Gemini removido mas pode usar caso queira no back**
+## **Estou usando novamente o código que usa a API do gemini**
 
-🚨 O prompt que usei é bastante raso, você pode melhorar muito mais ele.
+🚨 Estou usando para gerar as perguntas e respostas dos cards. Você pode melhorar mais o prompt caso queira.
 
 ```
-const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.google_ai_key}`,
-        {
-          headers: { "Content-Type": "application/json" },
-          method: "POST",
-          body: JSON.stringify({
-            contents: [
+const requestBody = {
+        contents: [
+          {
+            parts: [
               {
-                parts: [
-                  {
-                    text: `Acesse este link: ${link} e faça um resumo do conteúdo do link adicionando a sua explicação. Forme um resumo completo e rico. E também tópicos de quando usar.`,
-                  },
-                ],
+                text: `Acesse este link: ${link} e gere perguntas e respostas sobre o conteúdo. Quero que você organize as perguntas e respostas separados no padrão "Pergunta: resposta". Não inclua nenhuma outra informação, apenas as perguntas e respostas.`,
               },
             ],
-          }),
+          },
+        ],
+      };
+
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-goog-api-key": process.env.google_ai_key,
+          },
+          method: "POST",
+          body: JSON.stringify(requestBody),
         }
       );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Error response body:", errorText);
+        throw new Error(
+          `HTTP error! status: ${response.status}, body: ${errorText}`
+        );
+      }
 
       const result = await response.json();
       const resumo = result.candidates[0].content.parts[0].text;
 
-      ContentModel.create(titulo, link, created_at, resumo, function (err) {
-        if (err) return res.status(500).json({ error: err.message });
-        res.status(201).json({ id: this.lastID, titulo, link, created_at });
-      });
+      res.json(resumo);
+    } catch (error) {
+      console.error("Erro ao gerar perguntas e respostas:", error);
+      res.status(500).json({ error: "Erro ao gerar perguntas e respostas" });
+    }
 ```

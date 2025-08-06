@@ -1,4 +1,4 @@
-import { Component, effect } from '@angular/core';
+import { Component, effect, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import LucideIconData from '../../shared/icons/LucideIconData';
 import { LucideAngularModule } from 'lucide-angular';
@@ -12,17 +12,47 @@ import { ContentService } from '../../services/content.service';
   templateUrl: './card-review.component.html',
   styleUrls: ['./card-review.component.css'],
 })
-export class CardReviewComponent {
+export class CardReviewComponent implements OnInit {
   backOfCard = false;
   content: Content | null = null;
+  questionsAndAnswers: Map<string, string> = new Map();
 
   constructor(private contentService: ContentService) {
     effect(() => {
       const content = this.contentService.reviewWithCard();
       if (content) {
         this.content = content;
+        this.loadQuestionsAndAnswers();
       }
     });
+  }
+
+  async ngOnInit() {
+    if (this.content) {
+      await this.loadQuestionsAndAnswers();
+    }
+  }
+
+  async loadQuestionsAndAnswers() {
+    if (this.content?.link) {
+      try {
+        const result = await this.contentService.questionsAndAnswers(
+          this.content.link
+        );
+        let questionsAndAnswers = result.split('\n\n');
+        questionsAndAnswers.forEach((qa) => {
+          const cleanedQa = qa.replace(/\*/g, '');
+          const [question, answer] = cleanedQa.split('?');
+          if (question && answer) {
+            this.questionsAndAnswers.set(question, answer);
+          }
+        });
+        console.log(this.questionsAndAnswers);
+      } catch (error) {
+        console.error('Erro ao carregar perguntas e respostas:', error);
+        this.questionsAndAnswers = new Map();
+      }
+    }
   }
 
   flipCard() {

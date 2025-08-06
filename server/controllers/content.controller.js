@@ -1,5 +1,4 @@
 const ContentModel = require("../models/content.model");
-require("dotenv").config();
 
 class ContentController {
   static _calculateNextReviewDate(row, createdDate) {
@@ -80,6 +79,52 @@ class ContentController {
       link: link,
       created_at: createdAt,
     };
+  }
+
+  static async getQuestionsLink(req, res) {
+    try {
+      const { link } = req.params;
+
+      const requestBody = {
+        contents: [
+          {
+            parts: [
+              {
+                text: `Acesse este link: ${link} e gere perguntas e respostas sobre o conteúdo. Quero que você organize as perguntas e respostas separados no padrão "Pergunta: resposta". Não inclua nenhuma outra informação, apenas as perguntas e respostas.`,
+              },
+            ],
+          },
+        ],
+      };
+
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-goog-api-key": process.env.google_ai_key,
+          },
+          method: "POST",
+          body: JSON.stringify(requestBody),
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Error response body:", errorText);
+        throw new Error(
+          `HTTP error! status: ${response.status}, body: ${errorText}`
+        );
+      }
+
+      const result = await response.json();
+      const resumo = result.candidates[0].content.parts[0].text;
+
+      res.json(resumo);
+    } catch (error) {
+      console.error("Erro ao gerar perguntas e respostas:", error);
+      res.status(500).json({ error: "Erro ao gerar perguntas e respostas" });
+    }
   }
 
   static async create(req, res) {
