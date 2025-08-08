@@ -5,11 +5,12 @@
       class="card-inner relative w-full h-full transition-transform duration-800"
       [ngClass]="backOfCard ? 'rotated' : ''"
     >
+      @for (item of questionsAndAnswers; track $index) {
       <div
         class="card-face absolute w-full h-full bg-black rounded-2xl text-white flex flex-col justify-center items-center"
       >
         <div class="text-lg font-medium text-center px-6">
-          Aqui irá a pergunta
+          {{ item[0] }}
         </div>
       </div>
 
@@ -17,9 +18,10 @@
         class="card-face card-back absolute w-full h-full bg-gray-800 rounded-2xl text-white flex flex-col justify-center items-center"
       >
         <div class="text-lg font-medium text-center px-6">
-          Aqui irá a resposta
+          {{ item[1] }}
         </div>
       </div>
+      }
     </div>
   </div>
 

@@ -179,8 +179,8 @@ Cada revisão fortalece a memória de longo prazo, garantindo melhor fixação d
 
 ## **Imagens do sistema**
 
-![Ultimos conteúdos adicionados](images-readme/adicionar-conteudo.png)
-![Revisões agendadas para o dia atual](images-readme/revisao-feita.png)
+![Ultimos conteúdos adicionados](images-readme/last-content.png)
+![Revisões agendadas para o dia atual](images-readme/review-today.png)
 
 ## **Estou usando novamente o código que usa a API do gemini**
 
