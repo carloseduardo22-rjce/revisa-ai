@@ -22,7 +22,52 @@
 </div>
 }
 <div class="p-6 flex flex-col">
-  <h1 class="text-[40px] mb-6">Revisões agendadas para hoje</h1>
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-[40px]">Revisões agendadas para hoje</h1>
+
+    <div class="flex gap-4">
+      <div
+        class="bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg px-6 py-4 shadow-lg"
+      >
+        <div class="flex items-center gap-3">
+          <div class="bg-white/20 rounded-full p-2">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+          </div>
+          <div>
+            <p class="text-sm font-medium opacity-90">Feitas hoje</p>
+            <p class="text-2xl font-bold">{{ todayReviewsCount }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg px-6 py-4 shadow-lg"
+      >
+        <div class="flex items-center gap-3">
+          <div class="bg-white/20 rounded-full p-2">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fill-rule="evenodd"
+                d="M10 2a8 8 0 100 16 8 8 0 000-16zm1 12a1 1 0 11-2 0 1 1 0 012 0zm-1-4a1 1 0 00-1 1v2a1 1 0 002 0v-2a1 1 0 00-1-1zm0-4a1 1 0 00-1 1 1 1 0 002 0 1 1 0 00-1-1z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+          </div>
+          <div>
+            <p class="text-sm font-medium opacity-90">Pendentes</p>
+            <p class="text-2xl font-bold">{{ pendingReviewsCount }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="bg-white rounded shadow overflow-hidden">
     <table class="w-full table-fixed">
       <thead class="bg-gray-50">

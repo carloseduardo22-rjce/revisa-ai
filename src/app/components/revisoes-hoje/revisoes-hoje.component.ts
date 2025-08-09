@@ -11,12 +11,16 @@ import { Router } from '@angular/router';
 export class RevisoesHojeComponent implements OnInit {
   reviewsToday: Content[] = [];
   loading: boolean = false;
+  todayReviewsCount: number = 0;
 
   get reviewStart() {
     return this.contentService.reviewStarted();
   }
   get stopWatch() {
     return this.contentService.stopWatch();
+  }
+  get pendingReviewsCount(): number {
+    return this.reviewsToday.length;
   }
 
   constructor(private contentService: ContentService, private router: Router) {}
@@ -55,6 +59,13 @@ export class RevisoesHojeComponent implements OnInit {
   }
 
   async lastReview(content: Content): Promise<void> {
+    this.revisionsMadeToday();
+    if (localStorage.getItem('revisionsMadeToday')) {
+      this.todayReviewsCount = parseInt(
+        localStorage.getItem('revisionsMadeToday')!
+      );
+    }
+
     this.loading = true;
     try {
       if (this.contentService.isTimerActive(content.id)) {
@@ -76,6 +87,19 @@ export class RevisoesHojeComponent implements OnInit {
       alert('❌ Erro ao conectar com o servidor');
     } finally {
       this.loading = false;
+    }
+  }
+
+  revisionsMadeToday() {
+    if (Object.keys(localStorage).includes('revisionsMadeToday')) {
+      const value = localStorage.getItem('revisionsMadeToday');
+      if (value) {
+        let convertedValue = Number.parseInt(value);
+        convertedValue++;
+        localStorage.setItem('revisionsMadeToday', convertedValue.toString());
+      }
+    } else {
+      localStorage.setItem('revisionsMadeToday', '1');
     }
   }
 }

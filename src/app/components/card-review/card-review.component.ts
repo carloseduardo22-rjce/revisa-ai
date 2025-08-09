@@ -15,7 +15,7 @@ import { ContentService } from '../../services/content.service';
 export class CardReviewComponent implements OnInit {
   backOfCard = false;
   content: Content | null = null;
-  questionsAndAnswers: Map<string, string> = new Map();
+  questionsAndAnswers: { question: string; answer: string }[] = [];
 
   constructor(private contentService: ContentService) {
     effect(() => {
@@ -44,13 +44,14 @@ export class CardReviewComponent implements OnInit {
           const cleanedQa = qa.replace(/\*/g, '');
           const [question, answer] = cleanedQa.split('?');
           if (question && answer) {
-            this.questionsAndAnswers.set(question, answer);
+            this.questionsAndAnswers.push({
+              question: question,
+              answer: answer,
+            });
           }
         });
-        console.log(this.questionsAndAnswers);
       } catch (error) {
         console.error('Erro ao carregar perguntas e respostas:', error);
-        this.questionsAndAnswers = new Map();
       }
     }
   }

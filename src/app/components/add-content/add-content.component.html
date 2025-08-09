@@ -16,30 +16,50 @@
   </div>
   @if (showForm) {
   <div class="mt-6 bg-gray-100 p-4 rounded flex flex-col gap-4 w-full">
-    <label class="flex flex-col gap-1">
-      <span class="font-semibold">Título do conteúdo</span>
-      <input
-        type="text"
-        class="border rounded p-2"
-        [(ngModel)]="titulo"
-        placeholder="Digite o título"
-      />
-    </label>
-    <label class="flex flex-col gap-1">
-      <span class="font-semibold">Link do conteúdo</span>
-      <input
-        type="text"
-        class="border rounded p-2"
-        [(ngModel)]="link"
-        placeholder="Cole o link aqui"
-      />
-    </label>
-    <button
-      class="bg-blue-600 text-white rounded p-2 mt-2 self-end cursor-pointer"
-      (click)="isEditing ? updateContent() : addContent()"
+    <form
+      [formGroup]="contentForm"
+      (ngSubmit)="isEditing ? updateContent() : addContent()"
     >
-      {{ isEditing ? "Atualizar" : "Salvar" }}
-    </button>
+      <label class="flex flex-col gap-1">
+        <span class="font-semibold">Título do conteúdo</span>
+        <input
+          type="text"
+          class="border rounded p-2"
+          formControlName="titulo"
+          placeholder="Digite o título"
+        />
+        @if (contentForm.get('titulo')?.invalid &&
+        contentForm.get('titulo')?.touched) {
+        <span class="font-semibold text-red-500"
+          >Por favor, forneça um título para o conteúdo</span
+        >
+        }
+      </label>
+      <label class="flex flex-col gap-1">
+        <span class="font-semibold">Link do conteúdo</span>
+        <input
+          type="url"
+          class="border rounded p-2"
+          formControlName="link"
+          placeholder="Cole o link aqui"
+        />
+        @if (contentForm.get('link')?.invalid &&
+        contentForm.get('link')?.touched) {
+        <span class="font-semibold text-red-500">
+          @if (contentForm.get('link')?.hasError('required')) { Por favor,
+          forneça um link } @if (contentForm.get('link')?.hasError('pattern')) {
+          Por favor, forneça uma URL válida }
+        </span>
+        }
+      </label>
+      <button
+        type="submit"
+        class="bg-blue-600 text-white rounded p-2 mt-2 self-end cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed"
+        [disabled]="contentForm.invalid || loading"
+      >
+        {{ isEditing ? "Atualizar" : "Salvar" }}
+      </button>
+    </form>
   </div>
   }
   <div class="mt-8">

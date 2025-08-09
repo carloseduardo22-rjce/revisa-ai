@@ -1,18 +1,29 @@
 import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ContentService } from '../../services/content.service';
 import { Content } from '../../models/content.interface';
 
 @Component({
   selector: 'app-add-content',
   standalone: true,
-  imports: [FormsModule],
+  imports: [ReactiveFormsModule],
   templateUrl: './add-content.component.html',
 })
 export class AddContentComponent implements OnInit {
+  contentForm = new FormGroup({
+    titulo: new FormControl('', [Validators.required, Validators.minLength(3)]),
+    link: new FormControl('', [
+      Validators.required,
+      Validators.pattern(/^https?:\/\/.+/),
+    ]),
+  });
+
   showForm = false;
-  titulo = '';
-  link = '';
   loading = false;
   contents: Content[] = [];
   editingId: number | null = null;
@@ -37,21 +48,18 @@ export class AddContentComponent implements OnInit {
   }
 
   async addContent() {
-    if (!this.titulo.trim() || !this.link.trim()) return;
+    if (this.contentForm.invalid) return;
 
     this.loading = true;
     try {
-      const result = await this.contentService.createContent({
-        title: this.titulo,
-        link: this.link,
+      const formValues = this.contentForm.value;
+
+      await this.contentService.createContent({
+        title: formValues.titulo!,
+        link: formValues.link!,
       });
 
-      if (result) {
-        console.log(result);
-      }
-
-      this.titulo = '';
-      this.link = '';
+      this.contentForm.reset();
       this.showForm = false;
 
       await this.loadContents();
@@ -63,13 +71,14 @@ export class AddContentComponent implements OnInit {
   }
 
   async updateContent() {
-    if (!this.titulo.trim() || !this.link.trim() || !this.editingId) return;
+    if (this.contentForm.invalid || !this.editingId) return;
 
     this.loading = true;
     try {
+      const formValues = this.contentForm.value;
       await this.contentService.updateContent(this.editingId, {
-        title: this.titulo,
-        link: this.link,
+        title: formValues.titulo!,
+        link: formValues.link!,
       });
 
       this.cancelEdit();
@@ -83,16 +92,19 @@ export class AddContentComponent implements OnInit {
 
   editContent(content: Content): void {
     this.editingId = content.id;
-    this.titulo = content.titulo;
-    this.link = content.link;
+    // Preeenche o formulário com os dados do conteúdo
+    this.contentForm.patchValue({
+      titulo: content.titulo,
+      link: content.link,
+    });
     this.isEditing = true;
     this.showForm = true;
   }
 
   cancelEdit(): void {
     this.editingId = null;
-    this.titulo = '';
-    this.link = '';
+    // Reset do formulário
+    this.contentForm.reset();
     this.isEditing = false;
     this.showForm = false;
   }
