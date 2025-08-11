@@ -22,12 +22,21 @@
 </div>
 }
 <div class="p-6 flex flex-col">
-  <div class="flex justify-between items-center mb-6">
-    <h1 class="text-[40px]">Revisões agendadas para hoje</h1>
-
+  <div class="flex justify-between items-stretch mb-6 gap-4">
+    <div
+      class="bg-black flex-1 h-28 rounded-lg overflow-hidden relative shadow-lg"
+    >
+      <img
+        src="/bg-reviewstoday.jpg"
+        alt="Background de revisões hoje"
+        class="w-full h-full object-cover opacity-80"
+        style="object-position: center 25%"
+      />
+      <div class="absolute inset-0 bg-black/20"></div>
+    </div>
     <div class="flex gap-4">
       <div
-        class="bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg px-6 py-4 shadow-lg"
+        class="bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg px-6 py-4 shadow-lg h-28 flex items-center"
       >
         <div class="flex items-center gap-3">
           <div class="bg-white/20 rounded-full p-2">
@@ -47,7 +56,7 @@
       </div>
 
       <div
-        class="bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg px-6 py-4 shadow-lg"
+        class="bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg px-6 py-4 shadow-lg h-28 flex items-center"
       >
         <div class="flex items-center gap-3">
           <div class="bg-white/20 rounded-full p-2">
@@ -61,7 +70,7 @@
           </div>
           <div>
             <p class="text-sm font-medium opacity-90">Pendentes</p>
-            <p class="text-2xl font-bold">{{ pendingReviewsCount }}</p>
+            <p class="text-2xl font-bold">{{ reviewsToday.length }}</p>
           </div>
         </div>
       </div>

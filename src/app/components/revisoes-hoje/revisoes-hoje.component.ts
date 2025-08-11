@@ -19,9 +19,6 @@ export class RevisoesHojeComponent implements OnInit {
   get stopWatch() {
     return this.contentService.stopWatch();
   }
-  get pendingReviewsCount(): number {
-    return this.reviewsToday.length;
-  }
 
   constructor(private contentService: ContentService, private router: Router) {}
 

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ContentService } from '../../services/content.service';
 import { Content } from '../../models/content.interface';
@@ -10,7 +11,7 @@ import { LucideIconNode } from 'lucide-angular';
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [RouterLink, CommonModule, LucideAngularModule],
+  imports: [RouterLink, CommonModule, LucideAngularModule, RouterLinkActive],
   templateUrl: './sidebar.component.html',
 })
 export class SidebarComponent implements OnInit {
