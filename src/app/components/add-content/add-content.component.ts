@@ -92,7 +92,6 @@ export class AddContentComponent implements OnInit {
 
   editContent(content: Content): void {
     this.editingId = content.id;
-    // Preeenche o formulário com os dados do conteúdo
     this.contentForm.patchValue({
       titulo: content.titulo,
       link: content.link,
@@ -103,7 +102,6 @@ export class AddContentComponent implements OnInit {
 
   cancelEdit(): void {
     this.editingId = null;
-    // Reset do formulário
     this.contentForm.reset();
     this.isEditing = false;
     this.showForm = false;

@@ -1,40 +1,53 @@
-@if (content) {
+@if (content && questionsAndAnswers.length > 0) {
 <div class="flex flex-col gap-2 w-full h-full justify-center items-center">
   <div class="card-container w-96 h-72">
     <div
       class="card-inner relative w-full h-full transition-transform duration-800"
       [ngClass]="backOfCard ? 'rotated' : ''"
     >
-      @for (item of questionsAndAnswers; track $index) {
       <div
         class="card-face absolute w-full h-full bg-black rounded-2xl text-white flex flex-col justify-center items-center"
       >
         <div class="text-lg font-medium text-center px-6">
-          {{ item.question }}
+          {{ questionsAndAnswers[currentIndex].question }}
         </div>
       </div>
-
       <div
         class="card-face card-back absolute w-full h-full bg-gray-800 rounded-2xl text-white flex flex-col justify-center items-center"
       >
         <div class="text-lg font-medium text-center px-6">
-          {{ item.answer }}
+          {{ questionsAndAnswers[currentIndex].answer }}
         </div>
       </div>
-      }
     </div>
   </div>
 
-  <div>
+  <div class="flex gap-2 mt-2">
     <button
       class="bg-black text-white w-32 rounded-full p-1 cursor-pointer hover:bg-gray-800 transition-colors"
-      (click)="flipCard()"
+      (click)="backOfCard = !backOfCard"
     >
       {{ backOfCard ? "Ver Pergunta" : "Ver Resposta" }}
     </button>
+    <button
+      class="bg-black text-white w-32 rounded-full p-1 cursor-pointer hover:bg-gray-800 transition-colors"
+      (click)="nextCard()"
+      [disabled]="currentIndex >= questionsAndAnswers.length - 1"
+    >
+      Próximo
+    </button>
+    <button
+      class="bg-black text-white w-32 rounded-full p-1 cursor-pointer hover:bg-gray-800 transition-colors"
+      (click)="prevCard()"
+      [disabled]="currentIndex === 0"
+    >
+      Anterior
+    </button>
+  </div>
+  <div class="text-xs text-gray-400 mt-1">
+    Card {{ currentIndex + 1 }} de {{ questionsAndAnswers.length }}
   </div>
 </div>
-
 } @else {
 <div class="w-full h-full flex justify-center items-center">
   <div class="flex flex-col items-center">

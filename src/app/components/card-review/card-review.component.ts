@@ -16,6 +16,7 @@ export class CardReviewComponent implements OnInit {
   backOfCard = false;
   content: Content | null = null;
   questionsAndAnswers: { question: string; answer: string }[] = [];
+  currentIndex = 0;
 
   constructor(private contentService: ContentService) {
     effect(() => {
@@ -56,11 +57,21 @@ export class CardReviewComponent implements OnInit {
     }
   }
 
-  flipCard() {
-    this.backOfCard = !this.backOfCard;
-  }
-
   getIconByName(name: string): readonly LucideIconNode[] | undefined {
     return LucideIconData.getIconByName(name);
+  }
+
+  nextCard() {
+    if (this.currentIndex < this.questionsAndAnswers.length - 1) {
+      this.currentIndex++;
+      this.backOfCard = false;
+    }
+  }
+
+  prevCard() {
+    if (this.currentIndex > 0) {
+      this.currentIndex--;
+      this.backOfCard = false;
+    }
   }
 }
