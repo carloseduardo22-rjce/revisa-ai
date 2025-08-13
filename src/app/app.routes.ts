@@ -4,6 +4,7 @@ import { AddContentComponent } from './components/add-content/add-content.compon
 import { RevisoesHojeComponent } from './components/revisoes-hoje/revisoes-hoje.component';
 import { ForgottenReviewsComponent } from './components/forgotten-reviews/forgotten-reviews.component';
 import { CardReviewComponent } from './components/card-review/card-review.component';
+import { RecordAudioComponent } from './components/record-audio/record-audio.component';
 
 export const routes: Routes = [
   {
@@ -14,6 +15,7 @@ export const routes: Routes = [
       { path: 'reviews/today', component: RevisoesHojeComponent },
       { path: 'reviews/forget', component: ForgottenReviewsComponent },
       { path: 'reviews/with-cards', component: CardReviewComponent },
+      { path: 'audio', component: RecordAudioComponent },
     ],
   },
 ];

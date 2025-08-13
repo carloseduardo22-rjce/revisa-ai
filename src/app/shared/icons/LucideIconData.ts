@@ -4,6 +4,8 @@ import {
   CalendarClock,
   Annoyed,
   Swords,
+  MicVocal,
+  Square,
 } from 'lucide-angular';
 
 export interface IconData {
@@ -31,6 +33,14 @@ export default class LucideIconData {
       {
         icon: Swords,
         name: 'swords',
+      },
+      {
+        icon: MicVocal,
+        name: 'micVocal',
+      },
+      {
+        icon: Square,
+        name: 'square',
       },
     ];
   }
