@@ -68,36 +68,4 @@ export class RecordAudioComponent {
       console.error('Error: ', error);
     }
   }
-
-  /*
-  async getMedia(constraints: any) {
-    try {
-      if (this.recording) {
-        this.recording = false;
-        this.mediaRecorder?.stop();
-        this.stream?.getAudioTracks().forEach((track) => track.stop());
-      } else {
-        this.stream = await navigator.mediaDevices.getUserMedia(constraints);
-        this.recordedChunks = [];
-        this.mediaRecorder = new MediaRecorder(this.stream);
-
-        this.mediaRecorder.ondataavailable = (event) => {
-          if (event.data.size > 0) {
-            this.recordedChunks.push(event.data);
-          }
-        };
-
-        this.mediaRecorder.onstop = () => {
-          const blob = new Blob(this.recordedChunks, { type: 'audio/webm' });
-          this.recordAudioService.extractText(blob);
-        };
-
-        this.mediaRecorder.start();
-        this.recording = true;
-      }
-    } catch (err) {
-      alert('Erro ao acessar o microfone. Verifique as permissões.');
-    }
-  }
-    */
 }
