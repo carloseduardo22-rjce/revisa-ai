@@ -6,6 +6,7 @@ import {
   Swords,
   MicVocal,
   Square,
+  HardDriveDownload,
 } from 'lucide-angular';
 
 export interface IconData {
@@ -41,6 +42,10 @@ export default class LucideIconData {
       {
         icon: Square,
         name: 'square',
+      },
+      {
+        icon: HardDriveDownload,
+        name: 'hardDrive',
       },
     ];
   }

@@ -5,10 +5,11 @@ import { LucideAngularModule } from 'lucide-angular';
 import { LucideIconNode } from 'lucide-angular';
 import { Content } from '../../models/content.interface';
 import { ContentService } from '../../services/content.service';
+import { RecordAudioComponent } from '../record-audio/record-audio.component';
 
 @Component({
   selector: 'app-card-review',
-  imports: [CommonModule, LucideAngularModule],
+  imports: [CommonModule, LucideAngularModule, RecordAudioComponent],
   templateUrl: './card-review.component.html',
   styleUrls: ['./card-review.component.css'],
 })

@@ -11,7 +11,7 @@ import { RecordAudioService } from './service/record-audio.service';
 })
 export class RecordAudioComponent {
   recognition: any = null;
-  audio: string | null = null;
+  audio: string[] = [];
   recording: boolean = false;
 
   constructor(
@@ -39,7 +39,9 @@ export class RecordAudioComponent {
 
         this.recognition.onresult = (event: any) => {
           this.ngZone.run(() => {
-            this.audio = event.results[0][0].transcript;
+            if (event.results[0].isFinal) {
+              this.audio.push(event.results[0][0].transcript);
+            }
           });
         };
 
