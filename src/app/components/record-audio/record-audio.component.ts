@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef, NgZone } from '@angular/core';
 import LucideIconData from '../../shared/icons/LucideIconData';
 import { LucideAngularModule } from 'lucide-angular';
 import { LucideIconNode } from 'lucide-angular';
@@ -10,52 +10,55 @@ import { RecordAudioService } from './service/record-audio.service';
   templateUrl: './record-audio.component.html',
 })
 export class RecordAudioComponent {
-  constraints = {
-    audio: true,
-    video: false,
-  };
-  stream: MediaStream | null = null;
+  recognition: any = null;
+  audio: string | null = null;
   recording: boolean = false;
-  recordedChunks: Blob[] = [];
-  mediaRecorder: MediaRecorder | null = null;
-  audioUrl: string | null = null;
 
   constructor(
-    private cdr: ChangeDetectorRef,
-    private recordAudioService: RecordAudioService
+    private recordAudioService: RecordAudioService,
+    private ngZone: NgZone
   ) {}
 
   getIconByName(name: string): readonly LucideIconNode[] | undefined {
     return LucideIconData.getIconByName(name);
   }
 
-  async getMedia(constraints: any) {
+  getAudio() {
     try {
       if (this.recording) {
-        this.recording = false;
-        this.mediaRecorder?.stop();
-        this.stream?.getAudioTracks().forEach((track) => track.stop());
+        this.recognition.stop();
       } else {
-        this.stream = await navigator.mediaDevices.getUserMedia(constraints);
-        this.recordedChunks = [];
-        this.mediaRecorder = new MediaRecorder(this.stream);
+        const SpeechRecognition =
+          (window as any).SpeechRecognition ||
+          (window as any).webkitSpeechRecognition;
 
-        this.mediaRecorder.ondataavailable = (event) => {
-          if (event.data.size > 0) {
-            this.recordedChunks.push(event.data);
-          }
+        this.recognition = new SpeechRecognition();
+        this.recognition.continuous = true;
+        this.recognition.interimResults = true;
+        this.recognition.lang = 'pt-BR';
+
+        this.recognition.onresult = (event: any) => {
+          this.ngZone.run(() => {
+            this.audio = event.results[0][0].transcript;
+          });
         };
 
-        this.mediaRecorder.onstop = () => {
-          const blob = new Blob(this.recordedChunks, { type: 'audio/webm' });
-          this.recordAudioService.extractText(blob);
+        this.recognition.onaudioend = () => {
+          this.ngZone.run(() => {
+            this.recording = false;
+          });
         };
 
-        this.mediaRecorder.start();
-        this.recording = true;
+        this.recognition.onstart = () => {
+          this.ngZone.run(() => {
+            this.recording = true;
+          });
+        };
+
+        this.recognition.start();
       }
-    } catch (err) {
-      alert('Erro ao acessar o microfone. Verifique as permissões.');
+    } catch (error) {
+      console.error('Error: ', error);
     }
   }
 }

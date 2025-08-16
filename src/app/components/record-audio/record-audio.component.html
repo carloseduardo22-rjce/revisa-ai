@@ -1,7 +1,7 @@
 <div class="bg-black rounded-full p-2 w-11 audio">
   <button
-    (click)="getMedia(constraints)"
     class="cursor-pointer flex justify-center items-center w-full h-full"
+    (click)="getAudio()"
   >
     @if (!recording) {
     <i-lucide [img]="getIconByName('micVocal')" [color]="'white'"></i-lucide>
@@ -9,7 +9,4 @@
     <i-lucide [img]="getIconByName('square')" [color]="'white'"></i-lucide>
     }
   </button>
-  @if (audioUrl) {
-  <audio [src]="audioUrl" controls></audio>
-  }
 </div>
