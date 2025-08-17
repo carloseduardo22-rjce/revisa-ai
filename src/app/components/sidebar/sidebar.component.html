@@ -1,7 +1,7 @@
 <div class="pl-4 pt-4 flex flex-col">
   <nav>
     <ul class="flex flex-col gap-2.5">
-      <li class="flex gap-1">
+      <li class="hover:bg-gray-100 flex gap-1 w-56 p-1 rounded-2xl">
         <i-lucide [img]="getIconByName('plus')"></i-lucide>
         <a
           [routerLink]="['contents/add']"
@@ -9,8 +9,8 @@
           >Adicionar conteúdo</a
         >
       </li>
-      <li>
-        <div class="flex gap-1 items-center">
+      <li class="hover:bg-gray-100 w-56 p-1 rounded-2xl">
+        <div class="flex gap-2 items-center">
           <i-lucide [img]="getIconByName('calendarClock')"></i-lucide>
           <a
             [routerLink]="['/reviews/today']"
@@ -24,8 +24,8 @@
           </div>
         </div>
       </li>
-      <li>
-        <div class="flex items-center gap-1">
+      <li class="hover:bg-gray-100 w-60 p-1 rounded-2xl">
+        <div class="flex items-center gap-2">
           <i-lucide [img]="getIconByName('annoyed')"></i-lucide>
           <a
             [routerLink]="['/reviews/forget']"
@@ -39,8 +39,8 @@
           </div>
         </div>
       </li>
-      <li>
-        <div class="flex items-center gap-1">
+      <li class="hover:bg-gray-100 w-56 p-1 rounded-2xl">
+        <div class="flex items-center gap-2">
           <i-lucide [img]="getIconByName('swords')"></i-lucide>
           <a
             [routerLink]="['/reviews/with-cards']"
@@ -49,8 +49,8 @@
           >
         </div>
       </li>
-      <li>
-        <div class="flex items-center gap-1">
+      <li class="hover:bg-gray-100 w-56 p-1 rounded-2xl">
+        <div class="flex items-center gap-2">
           <a [routerLink]="['/audio']" [routerLinkActive]="['text-blue-500']"
             >Testes gravar audio</a
           >

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, NgZone } from '@angular/core';
+import { Component, ChangeDetectorRef, NgZone, Input } from '@angular/core';
 import LucideIconData from '../../shared/icons/LucideIconData';
 import { LucideAngularModule } from 'lucide-angular';
 import { LucideIconNode } from 'lucide-angular';
@@ -13,6 +13,7 @@ export class RecordAudioComponent {
   recognition: any = null;
   audio: string[] = [];
   recording: boolean = false;
+  @Input() maxAudios: number | null = null;
 
   constructor(
     private recordAudioService: RecordAudioService,
@@ -39,8 +40,13 @@ export class RecordAudioComponent {
 
         this.recognition.onresult = (event: any) => {
           this.ngZone.run(() => {
-            if (event.results[0].isFinal) {
-              this.audio.push(event.results[0][0].transcript);
+            if (this.maxAudios) {
+              if (
+                event.results[0].isFinal &&
+                this.audio.length <= this.maxAudios
+              ) {
+                this.audio.push(event.results[0][0].transcript);
+              }
             }
           });
         };

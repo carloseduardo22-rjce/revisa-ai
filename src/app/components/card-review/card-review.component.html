@@ -20,7 +20,9 @@
         </div>
       </div>
     </div>
-    <app-record-audio></app-record-audio>
+    <app-record-audio
+      [maxAudios]="questionsAndAnswers.length"
+    ></app-record-audio>
   </div>
 
   <div class="flex gap-2 mt-2">
