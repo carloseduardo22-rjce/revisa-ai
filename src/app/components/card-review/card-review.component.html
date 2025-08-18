@@ -1,68 +1,207 @@
-@if (content && questionsAndAnswers.length > 0) {
-<div class="flex flex-col gap-2 w-full h-full justify-center items-center">
-  <div class="card-container w-96 h-72">
+@if (modalIntroduction && questionsAndAnswers.length > 0) {
+<div
+  class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 backdrop-blur-sm"
+>
+  <div
+    class="bg-white w-96 max-h-[90vh] border rounded-lg p-6 flex flex-col gap-4 shadow-lg overflow-y-auto"
+  >
+    <h1
+      class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 text-center"
+    >
+      🎯 Bem vindo a revisão com Cards!
+    </h1>
+
+    <div class="bg-blue-50 border-l-4 border-blue-500 p-3 rounded-r-lg">
+      <h3 class="font-semibold text-blue-800 mb-2">
+        📚 Como funciona a revisão com cards?
+      </h3>
+      <p class="text-blue-700 text-sm">
+        A revisão com cards é uma técnica que utiliza cartões para ajudar na
+        memorização e revisão de conteúdos. Cada cartão contém uma pergunta de
+        um lado e a resposta do outro. Você pode navegar entre os cartões,
+        tentando responder as perguntas antes de virar o cartão e verificar a
+        resposta.
+      </p>
+    </div>
+
+    <div class="bg-green-50 border-l-4 border-green-500 p-3 rounded-r-lg">
+      <h3 class="font-semibold text-green-800 mb-2">
+        🎙️ Como usar esta funcionalidade:
+      </h3>
+      <p class="text-green-700 text-sm">
+        Se você notar no canto superior direito existe um
+        <span class="bg-green-200 text-green-800 px-2 py-1 rounded font-medium"
+          >botão com um microfone</span
+        >
+        dentro para você começar a gravação da resposta. A única forma de você
+        conseguir ver a resposta ou avançar para outro card é
+        <span class="text-green-900 font-semibold">gravando a resposta</span>. É
+        uma forma de você se esforçar sozinho sem ver a resposta antes.
+      </p>
+    </div>
+
+    <div class="bg-purple-50 border-l-4 border-purple-500 p-3 rounded-r-lg">
+      <h3 class="font-semibold text-purple-800 mb-2">🏆 O porquê disso?</h3>
+      <p class="text-purple-700 text-sm">
+        É para nosso
+        <span
+          class="bg-purple-200 text-purple-800 px-2 py-1 rounded font-medium"
+          >sistema de gamificação</span
+        >
+        que estará coletando o quanto em porcentagem você acertou para que
+        possamos lhe ajudar com um feedback e também é uma forma de lhe dizer a
+        verdade sobre seu
+        <span class="text-purple-900 font-semibold">conhecimento atual</span>.
+      </p>
+    </div>
+
+    <button
+      class="mt-4 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg"
+      (click)="modalIntroduction = false"
+    >
+      ✨ Começar Revisão!
+    </button>
+  </div>
+</div>
+} @if (questionsAndAnswers.length > 0) {
+<app-record-audio
+  [maxAudios]="questionsAndAnswers.length"
+  (recordingEnd)="recordingEnd = $event"
+></app-record-audio>
+} @if (content && questionsAndAnswers.length > 0) {
+<div class="flex flex-col gap-4 w-full h-full justify-center items-center">
+  <div class="card-container w-96 h-80">
     <div
       class="card-inner relative w-full h-full transition-transform duration-800"
       [ngClass]="backOfCard ? 'rotated' : ''"
     >
       <div
-        class="card-face absolute w-full h-full bg-black rounded-2xl text-white flex flex-col justify-center items-center"
+        class="card-face absolute w-full h-full bg-gradient-to-br from-blue-600 to-purple-700 rounded-2xl text-white flex flex-col justify-center items-center shadow-2xl border border-blue-300"
       >
-        <div class="text-lg font-medium text-center px-6">
+        <div
+          class="absolute top-4 left-4 bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm font-medium text-black"
+        >
+          ❓ Pergunta
+        </div>
+        <div class="text-xl font-medium text-center px-8 leading-relaxed">
           {{ questionsAndAnswers[currentIndex].question }}
         </div>
+        <div
+          class="absolute bottom-4 right-4 bg-white bg-opacity-20 px-3 py-1 rounded-full text-xs text-black"
+        >
+          🎯 Pense na resposta
+        </div>
       </div>
+
       <div
-        class="card-face card-back absolute w-full h-full bg-gray-800 rounded-2xl text-white flex flex-col justify-center items-center"
+        class="card-face card-back absolute w-full h-full bg-gradient-to-br from-green-600 to-emerald-700 rounded-2xl text-white flex flex-col justify-center items-center shadow-2xl border border-green-300"
       >
-        <div class="text-lg font-medium text-center px-6">
+        <div
+          class="absolute top-4 left-4 bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm font-medium text-black"
+        >
+          ✅ Resposta
+        </div>
+        <div class="text-xl font-medium text-center px-8 leading-relaxed">
           {{ questionsAndAnswers[currentIndex].answer }}
+        </div>
+        <div
+          class="absolute bottom-4 right-4 bg-white bg-opacity-20 px-3 py-1 rounded-full text-xs text-black"
+        >
+          🧠 Compare com sua resposta.
         </div>
       </div>
     </div>
-    <app-record-audio
-      [maxAudios]="questionsAndAnswers.length"
-      (recordingEnd)="recordingEnd = $event"
-    ></app-record-audio>
   </div>
 
-  <div class="flex gap-2 mt-2">
+  <div class="flex gap-3 mt-4">
     <button
-      class="bg-black text-white w-32 rounded-full p-1 cursor-pointer hover:bg-gray-800 transition-colors"
+      class="bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 text-white w-36 rounded-full py-2 px-4 cursor-pointer transition-all duration-300 transform hover:scale-105 shadow-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
       (click)="recordingEnd ? (backOfCard = !backOfCard) : null"
       [disabled]="!recordingEnd && !backOfCard"
     >
-      {{ backOfCard ? "Ver Pergunta" : "Ver Resposta" }}
+      {{ backOfCard ? "👁️ Ver Pergunta" : "🔍 Ver Resposta" }}
     </button>
     <button
-      class="bg-black text-white w-32 rounded-full p-1 cursor-pointer hover:bg-gray-800 transition-colors"
+      class="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white w-32 rounded-full py-2 px-4 cursor-pointer transition-all duration-300 transform hover:scale-105 shadow-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
       (click)="nextCard()"
       [disabled]="
         currentIndex >= questionsAndAnswers.length - 1 || !recordingEnd
       "
     >
-      Próximo
+      ➡️ Próximo
     </button>
     <button
-      class="bg-black text-white w-32 rounded-full p-1 cursor-pointer hover:bg-gray-800 transition-colors"
+      class="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white w-32 rounded-full py-2 px-4 cursor-pointer transition-all duration-300 transform hover:scale-105 shadow-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
       (click)="prevCard()"
       [disabled]="currentIndex === 0"
     >
-      Anterior
+      ⬅️ Anterior
     </button>
   </div>
-  <div class="text-xs text-gray-400 mt-1">
-    Card {{ currentIndex + 1 }} de {{ questionsAndAnswers.length }}
+
+  <div class="flex items-center gap-2 mt-2">
+    <div
+      class="bg-gradient-to-r from-purple-100 to-blue-100 px-4 py-2 rounded-full border border-purple-200"
+    >
+      <span class="text-purple-700 font-semibold text-sm">
+        📊 Card {{ currentIndex + 1 }} de {{ questionsAndAnswers.length }}
+      </span>
+    </div>
+    <div class="bg-yellow-100 px-3 py-1 rounded-full border border-yellow-300">
+      <span class="text-yellow-700 text-xs font-medium">
+        ⏱️
+        {{
+          Math.round(((currentIndex + 1) / questionsAndAnswers.length) * 100)
+        }}% completo
+      </span>
+    </div>
+  </div>
+
+  <div
+    class="mt-3 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-full px-4 py-2 max-w-md"
+  >
+    <p class="text-blue-700 text-xs text-center font-medium">
+      💾 Estamos coletando suas respostas para posterior feedback, você pode ver
+      naquele número ao lado do símbolo de disco
+    </p>
   </div>
 </div>
 } @else {
 <div class="w-full h-full flex justify-center items-center">
-  <div class="flex flex-col items-center">
-    <i-lucide [img]="getIconByName('swords')" size="70"></i-lucide>
-    <h1>
-      Sessão não liberada, para conseguir acesso, clique em algum conteúdo
-      disponível para hoje na seção 'Revisões para hoje'
-    </h1>
+  <div class="flex flex-col items-center max-w-md text-center">
+    <div
+      class="bg-gradient-to-br from-orange-400 to-red-500 p-6 rounded-full mb-6 shadow-lg"
+    >
+      <i-lucide
+        [img]="getIconByName('swords')"
+        size="70"
+        class="text-white"
+      ></i-lucide>
+    </div>
+    <div
+      class="bg-gradient-to-br from-orange-50 to-red-50 border-2 border-orange-200 rounded-2xl p-6 shadow-xl"
+    >
+      <h1
+        class="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-red-600 mb-4"
+      >
+        🔒 Sessão não liberada
+      </h1>
+      <p class="text-gray-700 leading-relaxed">
+        Para conseguir acesso, clique em algum
+        <span
+          class="bg-orange-200 text-orange-800 px-2 py-1 rounded font-medium"
+          >conteúdo disponível</span
+        >
+        para hoje na seção
+        <span class="text-orange-700 font-semibold">'Revisões para hoje'</span>
+      </p>
+      <div class="mt-4 bg-blue-50 border-l-4 border-blue-400 p-3 rounded-r-lg">
+        <p class="text-blue-700 text-sm">
+          💡 <strong>Dica:</strong> Navegue até a página inicial e selecione um
+          dos conteúdos programados para hoje!
+        </p>
+      </div>
+    </div>
   </div>
 </div>
 }

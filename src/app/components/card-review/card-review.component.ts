@@ -6,6 +6,7 @@ import { LucideIconNode } from 'lucide-angular';
 import { Content } from '../../models/content.interface';
 import { ContentService } from '../../services/content.service';
 import { RecordAudioComponent } from '../record-audio/record-audio.component';
+import questionsAndAnswersTest from './questionAndAnswersTest';
 
 @Component({
   selector: 'app-card-review',
@@ -19,6 +20,8 @@ export class CardReviewComponent implements OnInit {
   questionsAndAnswers: { question: string; answer: string }[] = [];
   currentIndex = 0;
   recordingEnd: boolean = false;
+  modalIntroduction: boolean = true;
+  Math = Math;
 
   constructor(private contentService: ContentService) {
     effect(() => {
@@ -31,6 +34,9 @@ export class CardReviewComponent implements OnInit {
   }
 
   async ngOnInit() {
+    /*
+    this.questionsAndAnswers = questionsAndAnswersTest;
+*/
     if (this.content) {
       await this.loadQuestionsAndAnswers();
     }

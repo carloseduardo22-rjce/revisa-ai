@@ -181,6 +181,10 @@ Cada revisão fortalece a memória de longo prazo, garantindo melhor fixação d
 
 ![Ultimos conteúdos adicionados](images-readme/last-content.png)
 ![Revisões agendadas para o dia atual](images-readme/review-today.png)
+![Pergunta e o aúdio de resposta ainda não gravado](images-readme/questionAndUnrecordedAudio.png)
+![Pergunta e o aúdio de resposta gravado](images-readme/questionAndUnrecordedAudio.png)
+![Sessão não liberada](images-readme/sessionNotRelesead.png)
+![Costas do card - resposta](images-readme/answer.png)
 
 ## **Estou usando novamente o código que usa a API do gemini**
 

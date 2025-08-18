@@ -50,9 +50,24 @@ export class RevisoesHojeComponent implements OnInit {
     }
   }
 
-  reviewWithCard(content: Content): void {
-    this.contentService.reviewWithCard.set(content);
-    this.router.navigate(['reviews/with-cards']);
+  reviewWithCard(content?: Content): void {
+    if (content) {
+      this.contentService.reviewWithCard.set(content);
+      this.router.navigate(['reviews/with-cards']);
+    } else {
+      const content = {
+        id: Math.floor(Math.random() * 100) + 1,
+        titulo: 'Capital da frança',
+        link: 'gbrjygbrgtrg',
+        created_at: 'today',
+        nextReview: 'tommorow',
+        resume_ai: null,
+        ultima_revisao: 0,
+        data_ultima_revisao: null,
+        late: null,
+      };
+      this.contentService.reviewWithCard.set(content);
+    }
   }
 
   async lastReview(content: Content): Promise<void> {

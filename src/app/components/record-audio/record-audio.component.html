@@ -1,35 +1,41 @@
-<div
-  class="bg-black flex gap-1.5 justify-center items-center rounded-full p-1.5 w-32"
->
-  <button
-    class="cursor-pointer flex justify-center items-center w-10 h-10"
-    (click)="getAudio()"
-  >
-    @if (!recording) {
-    <i-lucide
-      [img]="getIconByName('micVocal')"
-      [size]="24"
-      class="bg-amber-400 rounded-2xl flex justify-center items-center w-full h-full p-1"
-      title="Gravar a resposta"
-    ></i-lucide>
-    } @else {
-    <i-lucide
-      [img]="getIconByName('square')"
-      [size]="24"
-      class="bg-amber-400 rounded-2xl flex justify-center items-center w-full h-full p-1"
-      title="Parar a gravação"
-    ></i-lucide>
-    }
-  </button>
-  <div
-    class="flex bg-amber-400 rounded-2xl items-center w-12 h-10 justify-center"
-  >
-    <i-lucide
-      [img]="getIconByName('hardDrive')"
-      [size]="20"
-      class="flex justify-center items-center cursor-pointer"
-      title="Mostra a quantidade de aúdios já capturados"
-    ></i-lucide>
-    <p class="text-black text-xs font-semibold ml-0.5">{{ audio.length }}</p>
+<div class="w-full justify-center">
+  <div class="w-[1050px] flex justify-end p-1">
+    <div
+      class="bg-black flex gap-1.5 justify-center items-center rounded-full p-1.5 w-32"
+    >
+      <button
+        class="cursor-pointer flex justify-center items-center w-10 h-10"
+        (click)="getAudio()"
+      >
+        @if (!recording) {
+        <i-lucide
+          [img]="getIconByName('micVocal')"
+          [size]="24"
+          class="bg-amber-400 rounded-2xl flex justify-center items-center w-full h-full p-1"
+          title="Gravar a resposta"
+        ></i-lucide>
+        } @else {
+        <i-lucide
+          [img]="getIconByName('square')"
+          [size]="24"
+          class="bg-amber-400 rounded-2xl flex justify-center items-center w-full h-full p-1"
+          title="Parar a gravação"
+        ></i-lucide>
+        }
+      </button>
+      <div
+        class="flex bg-amber-400 rounded-2xl items-center w-12 h-10 justify-center"
+      >
+        <i-lucide
+          [img]="getIconByName('hardDrive')"
+          [size]="20"
+          class="flex justify-center items-center cursor-pointer"
+          title="Mostra a quantidade de aúdios já capturados"
+        ></i-lucide>
+        <p class="text-black text-xs font-semibold ml-0.5">
+          {{ audio.length }}
+        </p>
+      </div>
+    </div>
   </div>
 </div>
