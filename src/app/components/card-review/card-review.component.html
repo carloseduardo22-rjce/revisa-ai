@@ -22,20 +22,24 @@
     </div>
     <app-record-audio
       [maxAudios]="questionsAndAnswers.length"
+      (recordingEnd)="recordingEnd = $event"
     ></app-record-audio>
   </div>
 
   <div class="flex gap-2 mt-2">
     <button
       class="bg-black text-white w-32 rounded-full p-1 cursor-pointer hover:bg-gray-800 transition-colors"
-      (click)="backOfCard = !backOfCard"
+      (click)="recordingEnd ? (backOfCard = !backOfCard) : null"
+      [disabled]="!recordingEnd && !backOfCard"
     >
       {{ backOfCard ? "Ver Pergunta" : "Ver Resposta" }}
     </button>
     <button
       class="bg-black text-white w-32 rounded-full p-1 cursor-pointer hover:bg-gray-800 transition-colors"
       (click)="nextCard()"
-      [disabled]="currentIndex >= questionsAndAnswers.length - 1"
+      [disabled]="
+        currentIndex >= questionsAndAnswers.length - 1 || !recordingEnd
+      "
     >
       Próximo
     </button>

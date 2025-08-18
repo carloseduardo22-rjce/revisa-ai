@@ -18,6 +18,7 @@ export class CardReviewComponent implements OnInit {
   content: Content | null = null;
   questionsAndAnswers: { question: string; answer: string }[] = [];
   currentIndex = 0;
+  recordingEnd: boolean = false;
 
   constructor(private contentService: ContentService) {
     effect(() => {
@@ -66,6 +67,7 @@ export class CardReviewComponent implements OnInit {
     if (this.currentIndex < this.questionsAndAnswers.length - 1) {
       this.currentIndex++;
       this.backOfCard = false;
+      this.recordingEnd = false;
     }
   }
 
@@ -73,6 +75,7 @@ export class CardReviewComponent implements OnInit {
     if (this.currentIndex > 0) {
       this.currentIndex--;
       this.backOfCard = false;
+      this.recordingEnd = false;
     }
   }
 }

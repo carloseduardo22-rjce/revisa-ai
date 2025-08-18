@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, NgZone, Input } from '@angular/core';
+import { Component, NgZone, Input, Output, EventEmitter } from '@angular/core';
 import LucideIconData from '../../shared/icons/LucideIconData';
 import { LucideAngularModule } from 'lucide-angular';
 import { LucideIconNode } from 'lucide-angular';
@@ -14,6 +14,7 @@ export class RecordAudioComponent {
   audio: string[] = [];
   recording: boolean = false;
   @Input() maxAudios: number | null = null;
+  @Output() recordingEnd = new EventEmitter<boolean>(false);
 
   constructor(
     private recordAudioService: RecordAudioService,
@@ -46,6 +47,7 @@ export class RecordAudioComponent {
                 this.audio.length <= this.maxAudios
               ) {
                 this.audio.push(event.results[0][0].transcript);
+                this.recordingEnd.emit(true);
               }
             }
           });
