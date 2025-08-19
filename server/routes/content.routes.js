@@ -12,10 +12,5 @@ router.post("/contents", ContentController.create);
 router.delete("/contents/:id", ContentController.delete);
 router.put("/contents", ContentController.updateRevisao);
 router.patch("/contents/:id", ContentController.updateContent);
-router.post(
-  "/cards/transcribe-audio",
-  multer().single("audio"),
-  CardController.transcribeAudio
-);
 
 module.exports = router;

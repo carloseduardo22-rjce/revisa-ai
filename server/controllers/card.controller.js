@@ -1,7 +1,3 @@
-class CardController {
-  static async transcribeAudio(req, res) {
-    const fileAudio = req.file;
-  }
-}
+class CardController {}
 
 module.exports = CardController;

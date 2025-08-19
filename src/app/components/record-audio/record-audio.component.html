@@ -5,9 +5,9 @@
     >
       <button
         class="cursor-pointer flex justify-center items-center w-10 h-10"
-        (click)="getAudio()"
+        (click)="toggleRecording()"
       >
-        @if (!recording) {
+        @if (!isRecording) {
         <i-lucide
           [img]="getIconByName('micVocal')"
           [size]="24"
@@ -33,7 +33,7 @@
           title="Mostra a quantidade de aúdios já capturados"
         ></i-lucide>
         <p class="text-black text-xs font-semibold ml-0.5">
-          {{ audio.length }}
+          {{ audioCount }}
         </p>
       </div>
     </div>

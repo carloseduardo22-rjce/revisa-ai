@@ -14,6 +14,14 @@ export class ContentService {
 
   reviewWithCard = signal<Content | null>(null);
   reviewStarted = signal<boolean>(false);
+  cardIndex = signal<number>(0);
+  questionsAndAnswersSignal = signal<
+    {
+      question: string;
+      answer: string;
+      answerUser?: string;
+    }[]
+  >([]);
   stopWatch = signal<string>('00:00');
 
   private timers: { [contentId: number]: boolean } = {};

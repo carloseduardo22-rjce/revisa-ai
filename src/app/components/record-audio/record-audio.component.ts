@@ -1,8 +1,9 @@
-import { Component, NgZone, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import LucideIconData from '../../shared/icons/LucideIconData';
 import { LucideAngularModule } from 'lucide-angular';
 import { LucideIconNode } from 'lucide-angular';
 import { RecordAudioService } from './service/record-audio.service';
+import { ContentService } from '../../services/content.service';
 
 @Component({
   selector: 'app-record-audio',
@@ -10,65 +11,37 @@ import { RecordAudioService } from './service/record-audio.service';
   templateUrl: './record-audio.component.html',
 })
 export class RecordAudioComponent {
-  recognition: any = null;
-  audio: string[] = [];
-  recording: boolean = false;
   @Input() maxAudios: number | null = null;
   @Output() recordingEnd = new EventEmitter<boolean>(false);
 
   constructor(
     private recordAudioService: RecordAudioService,
-    private ngZone: NgZone
+    private contentService: ContentService
   ) {}
+
+  get isRecording(): boolean {
+    return this.recordAudioService.isRecording;
+  }
+
+  get audioCount(): number {
+    return this.contentService
+      .questionsAndAnswersSignal()
+      .filter((qa) => qa.answerUser && qa.answerUser.trim() !== '').length;
+  }
 
   getIconByName(name: string): readonly LucideIconNode[] | undefined {
     return LucideIconData.getIconByName(name);
   }
 
-  getAudio() {
-    try {
-      if (this.recording) {
-        this.recognition.stop();
-      } else {
-        const SpeechRecognition =
-          (window as any).SpeechRecognition ||
-          (window as any).webkitSpeechRecognition;
-
-        this.recognition = new SpeechRecognition();
-        this.recognition.continuous = true;
-        this.recognition.interimResults = true;
-        this.recognition.lang = 'pt-BR';
-
-        this.recognition.onresult = (event: any) => {
-          this.ngZone.run(() => {
-            if (this.maxAudios) {
-              if (
-                event.results[0].isFinal &&
-                this.audio.length <= this.maxAudios
-              ) {
-                this.audio.push(event.results[0][0].transcript);
-                this.recordingEnd.emit(true);
-              }
-            }
-          });
-        };
-
-        this.recognition.onaudioend = () => {
-          this.ngZone.run(() => {
-            this.recording = false;
-          });
-        };
-
-        this.recognition.onstart = () => {
-          this.ngZone.run(() => {
-            this.recording = true;
-          });
-        };
-
-        this.recognition.start();
+  toggleRecording(): void {
+    if (this.isRecording) {
+      this.recordAudioService.stopRecording();
+    } else {
+      if (this.maxAudios) {
+        this.recordAudioService.startRecording(this.maxAudios, () =>
+          this.recordingEnd.emit(true)
+        );
       }
-    } catch (error) {
-      console.error('Error: ', error);
     }
   }
 }

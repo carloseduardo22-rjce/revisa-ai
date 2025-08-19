@@ -1,4 +1,4 @@
-import { Component, effect, OnInit } from '@angular/core';
+import { Component, effect, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import LucideIconData from '../../shared/icons/LucideIconData';
 import { LucideAngularModule } from 'lucide-angular';
@@ -14,14 +14,17 @@ import questionsAndAnswersTest from './questionAndAnswersTest';
   templateUrl: './card-review.component.html',
   styleUrls: ['./card-review.component.css'],
 })
-export class CardReviewComponent implements OnInit {
+export class CardReviewComponent {
   backOfCard = false;
   content: Content | null = null;
-  questionsAndAnswers: { question: string; answer: string }[] = [];
-  currentIndex = 0;
   recordingEnd: boolean = false;
   modalIntroduction: boolean = true;
   Math = Math;
+
+  questionsAndAnswers = computed(() =>
+    this.contentService.questionsAndAnswersSignal()
+  );
+  currentIndex = computed(() => this.contentService.cardIndex());
 
   constructor(private contentService: ContentService) {
     effect(() => {
@@ -31,20 +34,27 @@ export class CardReviewComponent implements OnInit {
         this.loadQuestionsAndAnswers();
       }
     });
+
+    effect(() => {
+      const qaArray = this.questionsAndAnswers();
+      if (qaArray.length === 0) {
+        this.contentService.questionsAndAnswersSignal.set(
+          questionsAndAnswersTest
+        );
+      }
+    });
   }
 
-  async ngOnInit() {
-    /*
-    this.questionsAndAnswers = questionsAndAnswersTest;
-*/
-    if (this.content) {
-      await this.loadQuestionsAndAnswers();
-    }
+  showResults() {
+    const result = this.contentService.questionsAndAnswersSignal();
+    console.log(result);
   }
 
   async loadQuestionsAndAnswers() {
     if (this.content?.link) {
       try {
+        this.contentService.questionsAndAnswersSignal.set([]);
+
         const result = await this.contentService.questionsAndAnswers(
           this.content.link
         );
@@ -53,10 +63,13 @@ export class CardReviewComponent implements OnInit {
           const cleanedQa = qa.replace(/\*/g, '');
           const [question, answer] = cleanedQa.split('?');
           if (question && answer) {
-            this.questionsAndAnswers.push({
-              question: question,
-              answer: answer,
-            });
+            this.contentService.questionsAndAnswersSignal.update((prev) => [
+              ...prev,
+              {
+                question: question + '?',
+                answer: answer.trim(),
+              },
+            ]);
           }
         });
       } catch (error) {
@@ -70,16 +83,21 @@ export class CardReviewComponent implements OnInit {
   }
 
   nextCard() {
-    if (this.currentIndex < this.questionsAndAnswers.length - 1) {
-      this.currentIndex++;
+    const currentIdx = this.contentService.cardIndex();
+    const questionsLength = this.questionsAndAnswers().length;
+
+    if (currentIdx < questionsLength - 1) {
+      this.contentService.cardIndex.update((idx) => idx + 1);
       this.backOfCard = false;
       this.recordingEnd = false;
     }
   }
 
   prevCard() {
-    if (this.currentIndex > 0) {
-      this.currentIndex--;
+    const currentIdx = this.contentService.cardIndex();
+
+    if (currentIdx > 0) {
+      this.contentService.cardIndex.update((idx) => idx - 1);
       this.backOfCard = false;
       this.recordingEnd = false;
     }

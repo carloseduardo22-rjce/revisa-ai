@@ -1,4 +1,4 @@
-@if (modalIntroduction && questionsAndAnswers.length > 0) {
+@if (modalIntroduction && questionsAndAnswers().length > 0) {
 <div
   class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 backdrop-blur-sm"
 >
@@ -63,12 +63,12 @@
     </button>
   </div>
 </div>
-} @if (questionsAndAnswers.length > 0) {
+} @if (questionsAndAnswers().length > 0) {
 <app-record-audio
-  [maxAudios]="questionsAndAnswers.length"
+  [maxAudios]="questionsAndAnswers().length"
   (recordingEnd)="recordingEnd = $event"
 ></app-record-audio>
-} @if (content && questionsAndAnswers.length > 0) {
+} @if (content && questionsAndAnswers().length > 0) {
 <div class="flex flex-col gap-4 w-full h-full justify-center items-center">
   <div class="card-container w-96 h-80">
     <div
@@ -84,7 +84,7 @@
           ❓ Pergunta
         </div>
         <div class="text-xl font-medium text-center px-8 leading-relaxed">
-          {{ questionsAndAnswers[currentIndex].question }}
+          {{ questionsAndAnswers()[currentIndex()].question }}
         </div>
         <div
           class="absolute bottom-4 right-4 bg-white bg-opacity-20 px-3 py-1 rounded-full text-xs text-black"
@@ -102,7 +102,7 @@
           ✅ Resposta
         </div>
         <div class="text-xl font-medium text-center px-8 leading-relaxed">
-          {{ questionsAndAnswers[currentIndex].answer }}
+          {{ questionsAndAnswers()[currentIndex()].answer }}
         </div>
         <div
           class="absolute bottom-4 right-4 bg-white bg-opacity-20 px-3 py-1 rounded-full text-xs text-black"
@@ -125,7 +125,7 @@
       class="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white w-32 rounded-full py-2 px-4 cursor-pointer transition-all duration-300 transform hover:scale-105 shadow-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
       (click)="nextCard()"
       [disabled]="
-        currentIndex >= questionsAndAnswers.length - 1 || !recordingEnd
+        currentIndex() >= questionsAndAnswers().length - 1 || !recordingEnd
       "
     >
       ➡️ Próximo
@@ -133,7 +133,7 @@
     <button
       class="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white w-32 rounded-full py-2 px-4 cursor-pointer transition-all duration-300 transform hover:scale-105 shadow-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
       (click)="prevCard()"
-      [disabled]="currentIndex === 0"
+      [disabled]="currentIndex() === 0"
     >
       ⬅️ Anterior
     </button>
@@ -144,17 +144,25 @@
       class="bg-gradient-to-r from-purple-100 to-blue-100 px-4 py-2 rounded-full border border-purple-200"
     >
       <span class="text-purple-700 font-semibold text-sm">
-        📊 Card {{ currentIndex + 1 }} de {{ questionsAndAnswers.length }}
+        📊 Card {{ currentIndex() + 1 }} de {{ questionsAndAnswers().length }}
       </span>
     </div>
     <div class="bg-yellow-100 px-3 py-1 rounded-full border border-yellow-300">
       <span class="text-yellow-700 text-xs font-medium">
         ⏱️
         {{
-          Math.round(((currentIndex + 1) / questionsAndAnswers.length) * 100)
+          Math.round(
+            ((currentIndex() + 1) / questionsAndAnswers().length) * 100
+          )
         }}% completo
       </span>
     </div>
+    <button
+      title="Ao clicar você irá ver os resultados reais com base nos áudios das respostas gravados."
+      (click)="showResults()"
+    >
+      Mostrar resultado
+    </button>
   </div>
 
   <div
