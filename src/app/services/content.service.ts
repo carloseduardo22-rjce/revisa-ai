@@ -1,16 +1,26 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 import {
   Content,
   CreateContentRequest,
   UpdateContentRequest,
+  QuestionAndAnswer,
 } from '../models/content.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ContentService {
+  private readonly http = inject(HttpClient);
   private readonly API_BASE = 'http://localhost:3000/api';
   private readonly CACHE_KEY = 'contents';
+
+  private readonly httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+    }),
+  };
 
   reviewWithCard = signal<Content | null>(null);
   reviewStarted = signal<boolean>(false);
@@ -40,19 +50,32 @@ export class ContentService {
     return await this.fetchFromServer();
   }
 
+  async getFeedback(questionsAndAnswers: QuestionAndAnswer[]) {
+    try {
+      const result = await firstValueFrom(
+        this.http.post<any>(
+          `${this.API_BASE}/feedback`,
+          { questionsAndAnswers },
+          this.httpOptions
+        )
+      );
+      return result;
+    } catch (error) {
+      console.error('Erro ao obter feedback:', error);
+      throw error;
+    }
+  }
+
   async createContent(request: CreateContentRequest): Promise<any> {
     try {
-      const response = await fetch(`${this.API_BASE}/contents`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(request),
-      });
+      const result = await firstValueFrom(
+        this.http.post<any>(
+          `${this.API_BASE}/contents`,
+          request,
+          this.httpOptions
+        )
+      );
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result = await response.json();
       this.clearCache();
       return result;
     } catch (error) {
@@ -63,15 +86,12 @@ export class ContentService {
 
   async questionsAndAnswers(link: string): Promise<string> {
     try {
-      const response = await fetch(
-        `${this.API_BASE}/questions/${encodeURIComponent(link)}`
+      const result = await firstValueFrom(
+        this.http.get<string>(
+          `${this.API_BASE}/questions/${encodeURIComponent(link)}`
+        )
       );
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result = await response.json();
       return result;
     } catch (error) {
       console.error('Erro ao buscar perguntas e respostas:', error);
@@ -81,15 +101,10 @@ export class ContentService {
 
   async deleteContent(id: number): Promise<any> {
     try {
-      const response = await fetch(`${this.API_BASE}/contents/${id}`, {
-        method: 'DELETE',
-      });
+      const result = await firstValueFrom(
+        this.http.delete<any>(`${this.API_BASE}/contents/${id}`)
+      );
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result = await response.json();
       this.clearCache();
       return result;
     } catch (error) {
@@ -100,15 +115,13 @@ export class ContentService {
 
   async updateContent(id: number, request: UpdateContentRequest): Promise<any> {
     try {
-      const response = await fetch(`${this.API_BASE}/contents/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(request),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      await firstValueFrom(
+        this.http.patch<any>(
+          `${this.API_BASE}/contents/${id}`,
+          request,
+          this.httpOptions
+        )
+      );
 
       this.clearCache();
       return;
@@ -120,17 +133,14 @@ export class ContentService {
 
   async updateReview(content: Content): Promise<any> {
     try {
-      const response = await fetch(`${this.API_BASE}/contents`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(content),
-      });
+      const result = await firstValueFrom(
+        this.http.put<any>(
+          `${this.API_BASE}/contents`,
+          content,
+          this.httpOptions
+        )
+      );
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result = await response.json();
       this.clearCache();
       return result;
     } catch (error) {
@@ -290,8 +300,9 @@ export class ContentService {
 
   private async fetchFromServer(): Promise<Content[]> {
     try {
-      const response = await fetch(`${this.API_BASE}/contents`);
-      const contents = await response.json();
+      const contents = await firstValueFrom(
+        this.http.get<Content[]>(`${this.API_BASE}/contents`)
+      );
 
       this.saveToCache(contents);
       return contents;

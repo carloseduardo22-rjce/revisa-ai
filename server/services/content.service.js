@@ -27,6 +27,47 @@ class ContentService {
     return reviewDate;
   }
 
+  static async getFeedback(questionsAndAnswers) {
+    const requestBody = {
+      contents: [
+        {
+          parts: [
+            {
+              text: `Olá Gemini, aqui está um array de objetos que seria as perguntas e respostas geradas por você somada a resposta do usuário do meu sistema. 
+              Agora eu quero que você me retorne um objeto dizendo se o usuário acertou ou não para cada resposta dele. Vamos combinar que, se a resposta dele teve 70% de semalhança com a resposta certa ele acertou ok? 
+              Ai você retorna sim mais a porcentagem certo? Faça da melhor forma. Aqui está o array: 
+              ${questionsAndAnswers}
+              `,
+            },
+          ],
+        },
+      ],
+    };
+
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "X-goog-api-key": process.env.google_ai_key,
+        },
+        method: "POST",
+        body: JSON.stringify(requestBody),
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Error response body:", errorText);
+      throw new Error(
+        `HTTP error! status: ${response.status}, body: ${errorText}`
+      );
+    }
+
+    const result = await response.json();
+    return result.candidates[0].content.parts[0].text;
+  }
+
   static processContentRow(row) {
     const createdDate = new Date(row.created_at);
 

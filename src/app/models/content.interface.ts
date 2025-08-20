@@ -10,6 +10,12 @@ export interface Content {
   late?: string | null;
 }
 
+export interface QuestionAndAnswer {
+  question: string;
+  answer: string;
+  answerUser?: string | undefined;
+}
+
 export interface CreateContentRequest {
   title: string;
   link: string;

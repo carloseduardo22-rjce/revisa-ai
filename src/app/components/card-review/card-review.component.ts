@@ -38,21 +38,18 @@ export class CardReviewComponent {
         this.loadQuestionsAndAnswers();
       }
     });
-
-    effect(() => {
-      const qaArray = this.questionsAndAnswers();
-      if (qaArray.length === 0) {
-        this.contentService.questionsAndAnswersSignal.set(
-          questionsAndAnswersTest
-        );
-      }
-    });
   }
 
   showResults(): boolean {
     return this.questionsAndAnswers().every(
       (qa) => qa.answerUser && qa.answerUser.trim() !== ''
     );
+  }
+
+  async getFeedback() {
+    const result = this.contentService.questionsAndAnswersSignal();
+    const feedback = await this.contentService.getFeedback(result);
+    console.log(feedback);
   }
 
   async loadQuestionsAndAnswers() {
