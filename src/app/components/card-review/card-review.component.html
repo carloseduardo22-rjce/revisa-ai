@@ -147,7 +147,7 @@
         📊 Card {{ currentIndex() + 1 }} de {{ questionsAndAnswers().length }}
       </span>
     </div>
-    <div class="bg-yellow-100 px-3 py-1 rounded-full border border-yellow-300">
+    <div class="bg-yellow-100 px-4 py-2 rounded-full border border-yellow-300">
       <span class="text-yellow-700 text-xs font-medium">
         ⏱️
         {{
@@ -160,6 +160,8 @@
     <button
       title="Ao clicar você irá ver os resultados reais com base nos áudios das respostas gravados."
       (click)="showResults()"
+      class="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-full py-2 px-4 cursor-pointer transition-all duration-300 transform hover:scale-105 shadow-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:from-gray-400 disabled:to-gray-500 disabled:shadow-none"
+      [disabled]="!showResults()"
     >
       Mostrar resultado
     </button>

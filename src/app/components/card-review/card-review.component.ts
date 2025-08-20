@@ -7,6 +7,7 @@ import { Content } from '../../models/content.interface';
 import { ContentService } from '../../services/content.service';
 import { RecordAudioComponent } from '../record-audio/record-audio.component';
 import questionsAndAnswersTest from './questionAndAnswersTest';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-card-review',
@@ -26,7 +27,10 @@ export class CardReviewComponent {
   );
   currentIndex = computed(() => this.contentService.cardIndex());
 
-  constructor(private contentService: ContentService) {
+  constructor(
+    private contentService: ContentService,
+    private cdr: ChangeDetectorRef
+  ) {
     effect(() => {
       const content = this.contentService.reviewWithCard();
       if (content) {
@@ -45,9 +49,10 @@ export class CardReviewComponent {
     });
   }
 
-  showResults() {
-    const result = this.contentService.questionsAndAnswersSignal();
-    console.log(result);
+  showResults(): boolean {
+    return this.questionsAndAnswers().every(
+      (qa) => qa.answerUser && qa.answerUser.trim() !== ''
+    );
   }
 
   async loadQuestionsAndAnswers() {
@@ -84,9 +89,9 @@ export class CardReviewComponent {
 
   nextCard() {
     const currentIdx = this.contentService.cardIndex();
-    const questionsLength = this.questionsAndAnswers().length;
+    const questionsLength = this.questionsAndAnswers();
 
-    if (currentIdx < questionsLength - 1) {
+    if (currentIdx < questionsLength.length - 1) {
       this.contentService.cardIndex.update((idx) => idx + 1);
       this.backOfCard = false;
       this.recordingEnd = false;
