@@ -24,6 +24,7 @@ export class RevisoesHojeComponent implements OnInit {
 
   async ngOnInit() {
     await this.findReviewsToday();
+    this.loadTodayReviewsCount();
   }
 
   startTimer(contentId: number): void {
@@ -54,29 +55,11 @@ export class RevisoesHojeComponent implements OnInit {
     if (content) {
       this.contentService.reviewWithCard.set(content);
       this.router.navigate(['reviews/with-cards']);
-    } else {
-      const content = {
-        id: Math.floor(Math.random() * 100) + 1,
-        titulo: 'Capital da frança',
-        link: 'gbrjygbrgtrg',
-        created_at: 'today',
-        nextReview: 'tommorow',
-        resume_ai: null,
-        ultima_revisao: 0,
-        data_ultima_revisao: null,
-        late: null,
-      };
-      this.contentService.reviewWithCard.set(content);
     }
   }
 
   async lastReview(content: Content): Promise<void> {
-    this.revisionsMadeToday();
-    if (localStorage.getItem('revisionsMadeToday')) {
-      this.todayReviewsCount = parseInt(
-        localStorage.getItem('revisionsMadeToday')!
-      );
-    }
+    this.incrementTodayReviews();
 
     this.loading = true;
     try {
@@ -102,16 +85,16 @@ export class RevisoesHojeComponent implements OnInit {
     }
   }
 
-  revisionsMadeToday() {
-    if (Object.keys(localStorage).includes('revisionsMadeToday')) {
-      const value = localStorage.getItem('revisionsMadeToday');
-      if (value) {
-        let convertedValue = Number.parseInt(value);
-        convertedValue++;
-        localStorage.setItem('revisionsMadeToday', convertedValue.toString());
-      }
-    } else {
-      localStorage.setItem('revisionsMadeToday', '1');
-    }
+  private loadTodayReviewsCount(): void {
+    const count = localStorage.getItem('revisionsMadeToday');
+    this.todayReviewsCount = count ? parseInt(count, 10) : 0;
+  }
+
+  private incrementTodayReviews(): void {
+    const currentCount = localStorage.getItem('revisionsMadeToday');
+    const newCount = currentCount ? parseInt(currentCount, 10) + 1 : 1;
+
+    localStorage.setItem('revisionsMadeToday', newCount.toString());
+    this.todayReviewsCount = newCount;
   }
 }

@@ -6,7 +6,6 @@ import { LucideIconNode } from 'lucide-angular';
 import { Content } from '../../models/content.interface';
 import { ContentService } from '../../services/content.service';
 import { RecordAudioComponent } from '../record-audio/record-audio.component';
-import questionsAndAnswersTest from './questionAndAnswersTest';
 import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
