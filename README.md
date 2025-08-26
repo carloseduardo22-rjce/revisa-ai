@@ -67,7 +67,7 @@ docker-compose up -d
 
 ### **3. Acesse no navegador**
 
-- **Frontend**: http://localhost
+- **Frontend**: http://localhost:4200
 - **API Backend**: http://localhost:3000/api (opcional)
 
 ### **4. Dados persistentes**
