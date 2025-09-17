@@ -11,11 +11,31 @@ export const routes: Routes = [
     path: '',
     component: LayoutComponent,
     children: [
-      { path: 'contents/add', component: AddContentComponent },
-      { path: 'reviews/today', component: RevisoesHojeComponent },
-      { path: 'reviews/forget', component: ForgottenReviewsComponent },
-      { path: 'reviews/with-cards', component: CardReviewComponent },
-      { path: 'audio', component: RecordAudioComponent },
+      {
+        path: 'contents/add',
+        component: AddContentComponent,
+        title: 'Conteúdos',
+      },
+      {
+        path: 'reviews/today',
+        component: RevisoesHojeComponent,
+        title: 'Revisões para hoje',
+      },
+      {
+        path: 'reviews/forget',
+        component: ForgottenReviewsComponent,
+        title: 'Revisões esquecidas',
+      },
+      {
+        path: 'reviews/with-cards',
+        component: CardReviewComponent,
+        title: 'Revisões com cartões',
+      },
+      {
+        path: 'audio',
+        component: RecordAudioComponent,
+        title: 'Gravação de Áudio',
+      },
     ],
   },
 ];
